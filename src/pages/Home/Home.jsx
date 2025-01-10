@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -19,8 +19,9 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 
-// Import your custom table component
-import CustomTable from '../../component/customtable'; // Renamed from 'Inbox' to 'CustomTable'
+// Import your custom components
+import CustomTable from '../../component/customtable';
+import Dashboard from '../../component/Dashboard'; // Import the new Dashboard component
 
 const drawerWidth = 240;
 
@@ -91,7 +92,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const [selectedComponent, setSelectedComponent] = useState('CustomTable');
+  const [selectedComponent, setSelectedComponent] = useState('Dashboard'); // Set Dashboard as the default selected component
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -104,6 +105,13 @@ export default function MiniDrawer() {
   const handleListItemClick = (component) => {
     setSelectedComponent(component);
   };
+
+  useEffect(() => {
+    // If the user is already logged in, load the default dashboard component (if not already selected)
+    if (!selectedComponent) {
+      setSelectedComponent('Dashboard');
+    }
+  }, [selectedComponent]);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -132,7 +140,7 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Custom Table', 'Starred', 'Send email', 'Drafts'].map((text) => (
+          {['Dashboard', 'Custom Table', 'Starred', 'Send email', 'Drafts'].map((text) => (
             <ListItem key={text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 onClick={() => handleListItemClick(text)}
@@ -147,7 +155,7 @@ export default function MiniDrawer() {
                     open ? { mr: 3 } : { mr: 'auto' },
                   ]}
                 >
-                  {text === 'Custom Table' ? <InboxIcon /> : <MailIcon />}
+                  {text === 'Dashboard' ? <InboxIcon /> : <MailIcon />}
                 </ListItemIcon>
                 <ListItemText
                   primary={text}
@@ -187,10 +195,12 @@ export default function MiniDrawer() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
+        {/* Render selected component */}
+        {selectedComponent === 'Dashboard' && <Dashboard />}
         {selectedComponent === 'Custom Table' && <CustomTable />}
-        {selectedComponent !== 'Custom Table' && (
+        {selectedComponent !== 'Dashboard' && selectedComponent !== 'Custom Table' && (
           <Typography variant="h6" sx={{ marginBottom: 2 }}>
-            {selectedComponent} Content
+            {selectedComponent}
           </Typography>
         )}
       </Box>
