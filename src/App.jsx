@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './component/AuthContext'; // Import AuthProvider
-import SignInPage from './pages/sign-in/sign-in'; 
+import SignInPage from './pages/Sign-in/Sign-in'; 
 import MiniDrawer from './pages/Home/Home';
 import ProtectedRoute from './component/ProtectedRoute'; // Import ProtectedRoute
 

@@ -16,8 +16,8 @@ const SignInPage = () => {
     event.preventDefault();
 
     // Hardcoded credentials (can replace with API call)
-    const validEmail = 'testuser@example.com';
-    const validPassword = 'TestPassword123';
+    const validEmail = 'futurekey@gmail.com';
+    const validPassword = 'Password123';
 
     if (email === validEmail && password === validPassword) {
       setError('');

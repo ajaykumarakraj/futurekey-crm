@@ -20,8 +20,9 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 
 // Import your custom components
-import CustomTable from '../../component/customtable';
+import CustomTable from '../../Table/customtable';
 import Dashboard from '../../component/Dashboard'; // Import the new Dashboard component
+import FormComponent from '../../component/Form';
 
 const drawerWidth = 240;
 
@@ -198,6 +199,7 @@ export default function MiniDrawer() {
         {/* Render selected component */}
         {selectedComponent === 'Dashboard' && <Dashboard />}
         {selectedComponent === 'Custom Table' && <CustomTable />}
+        {selectedComponent === 'Starred' && <FormComponent />}
         {selectedComponent !== 'Dashboard' && selectedComponent !== 'Custom Table' && (
           <Typography variant="h6" sx={{ marginBottom: 2 }}>
             {selectedComponent}
