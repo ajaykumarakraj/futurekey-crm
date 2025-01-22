@@ -1,0 +1,41 @@
+
+/* CSS to ensure horizontal scrolling only on the table */
+.table-container {
+    width: 100%;
+    overflow-x: auto;  /* Enables horizontal scrolling */
+    margin-top: 20px;
+    border: 1px solid #ccc;
+  }
+  
+  .MuiTableContainer-root {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  /* Ensure table does not expand beyond the container */
+  .MuiTable-root {
+    table-layout: fixed;
+    width: 100%;
+  }
+  
+  /* Optional: style the table header to make it stand out */
+  .MuiTableCell-head {
+    text-align: center;
+    border: 1px solid #ccc;  /* Border for the header cell */
+    background-color: #f5f5f5;
+  }
+  
+  /* Optional: Adjust table cell padding for better appearance */
+  .MuiTableCell-root {
+    padding: 8px;
+    border: 1px solid #ccc; 
+  }
+  .css-1pzfmz2-MuiInputBase-input-MuiOutlinedInput-input{
+    font-size: 11px !important;
+  }
+  select,input{
+    height: 30px;
+    border-radius: 5px;
+  padding: 5px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }

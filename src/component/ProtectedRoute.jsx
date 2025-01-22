@@ -3,9 +3,14 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const { user } = useAuth(); // Get authenticated user from context
 
-  return isAuthenticated ? children : <Navigate to="/sign-in" />; // Redirect to sign-in if not authenticated
+  // If no user is authenticated, redirect to sign-in
+  if (!user) {
+    return <Navigate to="/sign-in" replace />;
+  }
+
+  return children;
 };
 
 export default ProtectedRoute;

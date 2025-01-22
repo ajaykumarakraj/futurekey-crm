@@ -1,44 +1,182 @@
 import React from 'react';
-import { Box, Typography, Grid } from '@mui/material';
+import { Box, Card, CardContent, Typography, Grid } from '@mui/material'; // Ensure Box is imported
 
-const Dashboard = () => {
-  const boxData = [
-    { title: "Tasks", description: "View and manage your tasks." },
-    { title: "Reports", description: "Analyze your progress with reports." },
-    { title: "Messages", description: "Check your messages and notifications." },
-    { title: "Settings", description: "Customize your dashboard settings." },
-  ];
+const Dashboard = ({ onCardClick }) => {
+  const handleCardClick = (component) => {
+    onCardClick(component); // Notify parent about selected component
+  };
 
   return (
-    <Box sx={{ flexGrow: 1, padding: 3 }}>
-      <Grid container spacing={3}>
-        {boxData.map((box, index) => (
-          <Grid item xs={12} sm={6} md={3} key={index}>
-            <Box
-              sx={{
-                backgroundColor: '#f5f5f5',
-                padding: 3,
-                borderRadius: 2,
-                boxShadow: 2,
-                textAlign: 'center',
-                transition: 'transform 0.3s',
-                '&:hover': { transform: 'scale(1.05)' },
-              }}
-            >
-              <Typography
-                variant="h6"
-                component="h2"
-                gutterBottom
-                sx={{ color: '#1976d2', fontWeight: 'bold' }}
-              >
-                {box.title}
+    <Box sx={{ padding: 3, backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+      <Grid container spacing={3} justifyContent="center">
+        <Grid item xs={12} sm={6} md={3}>
+          <Card
+            sx={{
+              backgroundColor: '#1976d2',
+              color: 'white',
+              '&:hover': {
+                transform: 'scale(1.05)',
+                boxShadow: 6,
+              },
+              cursor: 'pointer',
+              transition: 'transform 0.3s, box-shadow 0.3s',
+            }}
+            onClick={() => handleCardClick('LeadsTable')}
+          >
+            <CardContent>
+              <Typography variant="h5" align="center">
+                New Leads
               </Typography>
-              <Typography variant="body2" sx={{ color: '#555' }}>
-                {box.description}
+              <Typography variant="body2" align="center" sx={{ fontSize: '30px' }}>
+                7687
               </Typography>
-            </Box>
-          </Grid>
-        ))}
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card
+            sx={{
+              backgroundColor: '#1976d2',
+              color: 'white',
+              '&:hover': {
+                transform: 'scale(1.05)',
+                boxShadow: 6,
+              },
+              cursor: 'pointer',
+              transition: 'transform 0.3s, box-shadow 0.3s',
+            }}
+            onClick={() => handleCardClick('LeadsTable')}
+          >
+            <CardContent>
+              <Typography variant="h5" align="center">
+                New Leads
+              </Typography>
+              <Typography variant="body2" align="center" sx={{ fontSize: '30px' }}>
+                7687
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card
+            sx={{
+              backgroundColor: '#1976d2',
+              color: 'white',
+              '&:hover': {
+                transform: 'scale(1.05)',
+                boxShadow: 6,
+              },
+              cursor: 'pointer',
+              transition: 'transform 0.3s, box-shadow 0.3s',
+            }}
+            onClick={() => handleCardClick('LeadsTable')}
+          >
+            <CardContent>
+              <Typography variant="h5" align="center">
+                New Leads
+              </Typography>
+              <Typography variant="body2" align="center" sx={{ fontSize: '30px' }}>
+                7687
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card
+            sx={{
+              backgroundColor: '#1976d2',
+              color: 'white',
+              '&:hover': {
+                transform: 'scale(1.05)',
+                boxShadow: 6,
+              },
+              cursor: 'pointer',
+              transition: 'transform 0.3s, box-shadow 0.3s',
+            }}
+            onClick={() => handleCardClick('LeadsTable')}
+          >
+            <CardContent>
+              <Typography variant="h5" align="center">
+                New Leads
+              </Typography>
+              <Typography variant="body2" align="center" sx={{ fontSize: '30px' }}>
+                7687
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card
+            sx={{
+              backgroundColor: '#1976d2',
+              color: 'white',
+              '&:hover': {
+                transform: 'scale(1.05)',
+                boxShadow: 6,
+              },
+              cursor: 'pointer',
+              transition: 'transform 0.3s, box-shadow 0.3s',
+            }}
+            onClick={() => handleCardClick('LeadsTable')}
+          >
+            <CardContent>
+              <Typography variant="h5" align="center">
+                New Leads
+              </Typography>
+              <Typography variant="body2" align="center" sx={{ fontSize: '30px' }}>
+                7687
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card
+            sx={{
+              backgroundColor: '#1976d2',
+              color: 'white',
+              '&:hover': {
+                transform: 'scale(1.05)',
+                boxShadow: 6,
+              },
+              cursor: 'pointer',
+              transition: 'transform 0.3s, box-shadow 0.3s',
+            }}
+            onClick={() => handleCardClick('LeadsTable')}
+          >
+            <CardContent>
+              <Typography variant="h5" align="center">
+                New Leads
+              </Typography>
+              <Typography variant="body2" align="center" sx={{ fontSize: '30px' }}>
+                7687
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card
+            sx={{
+              backgroundColor: '#1976d2',
+              color: 'white',
+              '&:hover': {
+                transform: 'scale(1.05)',
+                boxShadow: 6,
+              },
+              cursor: 'pointer',
+              transition: 'transform 0.3s, box-shadow 0.3s',
+            }}
+            onClick={() => handleCardClick('LeadsTable')}
+          >
+            <CardContent>
+              <Typography variant="h5" align="center">
+                New Leads
+              </Typography>
+              <Typography variant="body2" align="center" sx={{ fontSize: '30px' }}>
+                7687
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
     </Box>
   );

@@ -1,31 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import CssBaseline from '@mui/material/CssBaseline';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
+import {
+  Box,
+  AppBar as MuiAppBar,
+  Toolbar,
+  Typography,
+  CssBaseline,
+  IconButton,
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Drawer as MuiDrawer,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-
-// Import your custom components
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import LeaderboardIcon from '@mui/icons-material/Leaderboard';
+import AddIcon from '@mui/icons-material/Add';
+import TableChartIcon from '@mui/icons-material/TableChart';
+import TableViewSharpIcon from '@mui/icons-material/TableViewSharp';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
+import SupportIcon from '@mui/icons-material/Help';
+import Dashboard from '../../component/Dashboard';
 import CustomTable from '../../Table/customtable';
-import Dashboard from '../../component/Dashboard'; // Import the new Dashboard component
 import FormComponent from '../../component/Form';
+import WalkUpload from '../../component/WalkUpload';
+import ChangePassword from '../../component/ChangePassword';
+import ContactSupport from '../../component/ContactSupport';
 
-const drawerWidth = 240;
 
+const drawerWidth = 280;
+
+
+
+// Drawer opening and closing styles
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', {
@@ -43,15 +58,16 @@ const closedMixin = (theme) => ({
   overflowX: 'hidden',
   width: `calc(${theme.spacing(7)} + 1px)`,
   [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
+    width: `calc(${theme.spacing(9)} + 1px)`,
   },
 });
 
+// Drawer header styling
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'flex-end',
-  padding: theme.spacing(0, 1),
+  justifyContent: 'space-between',
+  padding: theme.spacing(0, 2),
   ...theme.mixins.toolbar,
 }));
 
@@ -93,118 +109,165 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const [selectedComponent, setSelectedComponent] = useState('Dashboard'); // Set Dashboard as the default selected component
+  const [selectedComponent, setSelectedComponent] = useState('Dashboard');
+  const [isLeadsMenuOpen, setIsLeadsMenuOpen] = useState(false); // State to manage leads sub-menu visibility
+  const [activeMenuItem, setActiveMenuItem] = useState('Dashboard'); // For active menu highlight
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+  const handleDrawerOpen = () => setOpen(true);
+  const handleDrawerClose = () => setOpen(false);
 
   const handleListItemClick = (component) => {
-    setSelectedComponent(component);
+    setActiveMenuItem(component); // Set active menu item
+    if (component === 'Leads') {
+      setIsLeadsMenuOpen(!isLeadsMenuOpen); // Toggle the Leads submenu
+    } else {
+      setSelectedComponent(component); // Set the selected component for rendering
+      setIsLeadsMenuOpen(false); // Close the submenu when navigating to another component
+    }
   };
 
-  useEffect(() => {
-    // If the user is already logged in, load the default dashboard component (if not already selected)
-    if (!selectedComponent) {
-      setSelectedComponent('Dashboard');
-    }
-  }, [selectedComponent]);
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    window.location.href = '/sign-in';
+  };
+
+  const handleChangePassword = () => {
+    setSelectedComponent('ChangePassword');
+  };
+
+  const handleContactSupport = () => {
+    setSelectedComponent('ContactSupport');
+  };
+
+  const menuItems = [
+    { label: 'Dashboard', icon: <DashboardIcon sx={{color:"red"}}/> },
+    { label: 'Leads', icon: <LeaderboardIcon sx={{color:"red"}} />, isSubMenu: true },
+    { label: 'Table', icon: <TableChartIcon /> },
+  ];
+
+  const settingsItems = [
+    { label: 'Change Password', icon: <SettingsIcon />, action: handleChangePassword },
+    { label: 'Contact Support', icon: <SupportIcon />, action: handleContactSupport },
+    { label: 'Sign Out', icon: <LogoutIcon />, action: handleLogout },
+  ];
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar position="fixed" open={open} sx={{ backgroundColor: '#1976d2' }}>
         <Toolbar>
           <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={[{ marginRight: 5 }, open && { display: 'none' }]}
+            sx={{ marginRight: 5, ...(open && { display: 'none' }) }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Mini variant drawer
+          <Typography variant="h6" noWrap>
+            Enhanced Mini Drawer
           </Typography>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
+          <Typography variant="h6" sx={{ display: open ? 'block' : 'none' }}>
+            Menu
+          </Typography>
+          <IconButton onClick={handleDrawerClose} >
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
-          {['Dashboard', 'Custom Table', 'Starred', 'Send email', 'Drafts'].map((text) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                onClick={() => handleListItemClick(text)}
-                sx={[
-                  { minHeight: 48, px: 2.5 },
-                  open ? { justifyContent: 'initial' } : { justifyContent: 'center' },
-                ]}
-              >
-                <ListItemIcon
-                  sx={[
-                    { minWidth: 0, justifyContent: 'center' },
-                    open ? { mr: 3 } : { mr: 'auto' },
-                  ]}
-                >
-                  {text === 'Dashboard' ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  sx={[open ? { opacity: 1 } : { opacity: 0 }]}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
+  {menuItems.map((item) => (
+    <div key={item.label}>
+      <ListItem disablePadding>
+        <ListItemButton
+          onClick={() => handleListItemClick(item.label)}
+          sx={{
+            backgroundColor: activeMenuItem === item.label ? '#e0e0e0' : 'transparent',
+          }}
+        >
+          <ListItemIcon sx={{minWidth:"0"}}>{item.icon}</ListItemIcon>
+          <ListItemText primary={item.label} sx={{ display: open ? 'block' : 'none' }} />
+          {item.isSubMenu && (
+            <ArrowForwardIosIcon
+              sx={{
+                fontSize: 14,
+                ml: 2,
+                transform: isLeadsMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+                transition: 'transform 0.3s ease',
+              }}
+            />
+          )}
+        </ListItemButton>
+      </ListItem>
+      {/* Enhanced Submenu */}
+      {item.label === 'Leads' && isLeadsMenuOpen && (
+        <List component="div"  disablePadding sx={{ ml: open ? 4 : 2,}}>
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => setSelectedComponent('CreateForm')}>
+              <ListItemIcon>
+                <AddIcon sx={{color:"red"}}/>
+              </ListItemIcon>
+              <ListItemText primary="Create New" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => setSelectedComponent('WalkUpload')}>
+              <ListItemIcon>
+                <FormatListBulletedIcon sx={{color:"red"}} />
+              </ListItemIcon>
+              <ListItemText primary="Wulk Upload" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => setSelectedComponent('LeadsTable')}>
+              <ListItemIcon>
+                <TableViewSharpIcon sx={{color:"red"}} />
+              </ListItemIcon>
+              <ListItemText primary="Leads Table" />
+            </ListItemButton>
+          </ListItem>
         </List>
+      )}
+    </div>
+  ))}
+</List>
+
         <Divider />
         <List>
-          {['All mail', 'Trash', 'Spam'].map((text) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                onClick={() => handleListItemClick(text)}
-                sx={[
-                  { minHeight: 48, px: 2.5 },
-                  open ? { justifyContent: 'initial' } : { justifyContent: 'center' },
-                ]}
-              >
-                <ListItemIcon
-                  sx={[
-                    { minWidth: 0, justifyContent: 'center' },
-                    open ? { mr: 3 } : { mr: 'auto' },
-                  ]}
-                >
-                  {text === 'All mail' ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  sx={[open ? { opacity: 1 } : { opacity: 0 }]}
-                />
+          {settingsItems.map((item) => (
+            <ListItem disablePadding key={item.label}>
+              <ListItemButton onClick={item.action}>
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.label} sx={{ display: open ? 'block' : 'none' }} />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          backgroundColor: '#f5f5f5',
+          minHeight: '100vh',
+        }}
+      >
         <DrawerHeader />
-        {/* Render selected component */}
-        {selectedComponent === 'Dashboard' && <Dashboard />}
-        {selectedComponent === 'Custom Table' && <CustomTable />}
-        {selectedComponent === 'Starred' && <FormComponent />}
-        {selectedComponent !== 'Dashboard' && selectedComponent !== 'Custom Table' && (
-          <Typography variant="h6" sx={{ marginBottom: 2 }}>
-            {selectedComponent}
-          </Typography>
-        )}
+     
+        {selectedComponent === 'CreateForm' && <FormComponent />}
+        {selectedComponent === 'LeadsTable' && <CustomTable />}
+        {selectedComponent === 'WalkUpload' && <WalkUpload />}
+        {selectedComponent === 'Table' && <CustomTable />}
+        {selectedComponent === 'ChangePassword' && <ChangePassword />}
+        {selectedComponent === 'ContactSupport' && <ContactSupport />}
+        {selectedComponent === 'Dashboard' && ( <Dashboard onCardClick={setSelectedComponent} />
+)}
       </Box>
     </Box>
   );

@@ -28,6 +28,11 @@ const SignInPage = () => {
     }
   };
 
+  const handleForgotPassword = () => {
+    // Navigate to the change password page
+    navigate('/change-password');
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <Paper sx={{ marginTop: '50px', padding: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: 2, boxShadow: 3 }}>
@@ -45,7 +50,10 @@ const SignInPage = () => {
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link href="#" variant="body2" color="primary">Forgot password?</Link>
+              {/* Change password link */}
+              <Link href="#" variant="body2" color="primary" onClick={handleForgotPassword}>
+                Forgot password?
+              </Link>
             </Grid>
           </Grid>
         </Box>
