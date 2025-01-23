@@ -142,19 +142,19 @@ export default function MiniDrawer() {
   const menuItems = [
     { label: 'Dashboard', icon: <DashboardIcon sx={{color:"red"}}/> },
     { label: 'Leads', icon: <LeaderboardIcon sx={{color:"red"}} />, isSubMenu: true },
-    { label: 'Table', icon: <TableChartIcon /> },
+    { label: 'Table', icon: <TableChartIcon sx={{color:"red"}}/> },
   ];
 
   const settingsItems = [
-    { label: 'Change Password', icon: <SettingsIcon />, action: handleChangePassword },
-    { label: 'Contact Support', icon: <SupportIcon />, action: handleContactSupport },
-    { label: 'Sign Out', icon: <LogoutIcon />, action: handleLogout },
+    { label: 'Change Password', icon: <SettingsIcon sx={{color:"red"}}/>, action: handleChangePassword },
+    { label: 'Contact Support', icon: <SupportIcon sx={{color:"red"}}/>, action: handleContactSupport },
+    { label: 'Sign Out', icon: <LogoutIcon sx={{color:"red"}}/>, action: handleLogout },
   ];
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open} sx={{ backgroundColor: '#1976d2' }}>
+      <AppBar position="fixed" open={open} sx={{ backgroundColor: '#c1c1c1' }}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -165,9 +165,13 @@ export default function MiniDrawer() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
-            Enhanced Mini Drawer
-          </Typography>
+          <Box display="flex" alignItems="center">
+            <img 
+                src="./FUTUREKEY-HOMES-3.1.png" 
+                alt="Enhanced Mini Drawer" 
+                style={{ width: '84px', height: 'auto', objectFit: 'contain',padding:'5px' }}
+            />
+        </Box>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -220,12 +224,12 @@ export default function MiniDrawer() {
               <ListItemIcon>
                 <FormatListBulletedIcon sx={{color:"red"}} />
               </ListItemIcon>
-              <ListItemText primary="Wulk Upload" />
+              <ListItemText primary="Bulk Upload" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton onClick={() => setSelectedComponent('LeadsTable')}>
-              <ListItemIcon>
+              <ListItemIcon >
                 <TableViewSharpIcon sx={{color:"red"}} />
               </ListItemIcon>
               <ListItemText primary="Leads Table" />
