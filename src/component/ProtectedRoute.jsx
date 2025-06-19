@@ -1,12 +1,13 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
 
 const ProtectedRoute = ({ children }) => {
-  const { user } = useAuth(); // Get authenticated user from context
+  // Check both storages for auth token
+  const token =
+    localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
 
-  // If no user is authenticated, redirect to sign-in
-  if (!user) {
+  if (!token) {
+    // Not logged in, redirect to sign-in page
     return <Navigate to="/sign-in" replace />;
   }
 

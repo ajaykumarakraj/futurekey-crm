@@ -1,35 +1,36 @@
+// src/component/AuthContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
-
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
-  // Check for auth token on initial load
-  useEffect(() => {
-    const authToken = localStorage.getItem('authToken');
-    if (authToken) {
-      setUser({ email: 'user@example.com' }); // Simulating authenticated user
-    }
-  }, []);
-
-  const login = () => {
-    setUser({ email: 'user@example.com' });
-    localStorage.setItem('authToken', 'your-auth-token'); // Simulate auth token
+  const [token, setToken] = useState(() => localStorage.getItem('token') || '');
+  console.log("User:", user);
+  console.log("Token:", token);
+  const login = ({ user, token }) => {
+    setUser(user);
+    setToken(token);
+    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('token', token);
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('authToken');
+    setToken('');
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => useContext(AuthContext);
