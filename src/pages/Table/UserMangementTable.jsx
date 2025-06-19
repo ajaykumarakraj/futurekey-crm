@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Example from "../Table/Example";
 import api from "../../component/api";
-
+import { useNavigate } from "react-router-dom";
 const UserManagementTable = () => {
+    const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -61,9 +62,31 @@ const UserManagementTable = () => {
         { field: "name", headerName: "Name", align: "left" },
         { field: "email", headerName: "Email", align: "left" },
         { field: "phone", headerName: "Contact Number", align: "center" },
-        { field: "role", headerName: "Role", align: "center" }
+        { field: "role", headerName: "Role", align: "center" },
+        {
+            // field: "actions",
+            headerName: "Actions",
+            align: "center",
+            renderCell: (row) => (
+                <button
+                    style={{
+                        padding: "6px 12px",
+                        backgroundColor: "#FFA500",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "4px",
+                        cursor: "pointer"
+                    }}
+                    onClick={() => handleEdit(row)}
+                >
+                    Edit
+                </button>
+            )
+        }
     ];
-
+    const handleEdit = (row) => {
+        navigate(`/user/update/${row.id}`);
+    };
     return (
         <div>
             {/* Table Section */}

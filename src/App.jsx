@@ -13,6 +13,7 @@ import SignInPage from './pages/SignInPage';
 import VerifyOtpPage from './pages/VerifyOtpPage';
 import UserForm from './pages/UserForm';
 import UserMangementTable from './pages/Table/UserMangementTable';
+import UpdateUserForm from './pages/UpdateUserForm';
 const App = () => {
   return (
     <Routes>
@@ -27,6 +28,7 @@ const App = () => {
         <Route path="leads/table" element={<CustomTable />} />
         <Route path="user/table" element={<UserMangementTable />} />
         <Route path='user/form' element={<UserForm />} />
+        <Route path="/user/update/:id" element={<UpdateUserForm />} />
         <Route path="table" element={<CustomTable />} />
         <Route path="change-password" element={<ChangePassword />} />
         <Route path="support" element={<ContactSupport />} />

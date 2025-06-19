@@ -73,12 +73,17 @@ export default function MiniDrawer() {
               <button
                 onClick={handleLeadsClick}
                 style={{
-                  background: 'none', color: 'white',
-                  border: 'none', width: '100%', textAlign: 'left',
-                  padding: '10px', borderRadius: '5px',
+                  color: 'white',
+                  border: 'none',
+                  width: '100%',
+                  textAlign: 'left',
+                  padding: '10px',
+                  borderRadius: '5px',
                   background: isLeadsOpen ? "#ff9800" : "none",
                   cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
                 }}
                 onMouseOver={(e) => e.target.style.background = "#ff9800"}
                 onMouseOut={(e) => e.target.style.background = isLeadsOpen ? "#ff9800" : "none"}
@@ -122,12 +127,17 @@ export default function MiniDrawer() {
               <button
                 onClick={() => setIsProjectsOpen((prev) => !prev)}
                 style={{
-                  background: 'none', color: 'white',
-                  border: 'none', width: '100%', textAlign: 'left',
-                  padding: '10px', borderRadius: '5px',
+                  color: 'white',
+                  border: 'none',
+                  width: '100%',
+                  textAlign: 'left',
+                  padding: '10px',
+                  borderRadius: '5px',
                   background: isProjectsOpen ? "#ff9800" : "none",
                   cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
                 }}
                 onMouseOver={(e) => e.target.style.background = "#ff9800"}
                 onMouseOut={(e) => e.target.style.background = isProjectsOpen ? "#ff9800" : "none"}
@@ -170,18 +180,24 @@ export default function MiniDrawer() {
               <button
                 onClick={() => setMasterOpen((prev) => !prev)}
                 style={{
-                  background: 'none', color: 'white',
-                  border: 'none', width: '100%', textAlign: 'left',
-                  padding: '10px', borderRadius: '5px',
+                  color: 'white',
+                  border: 'none',
+                  width: '100%',
+                  textAlign: 'left',
+                  padding: '10px',
+                  borderRadius: '5px',
                   background: isMasterOpen ? "#ff9800" : "none",
                   cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
                 }}
                 onMouseOver={(e) => e.target.style.background = "#ff9800"}
                 onMouseOut={(e) => e.target.style.background = isMasterOpen ? "#ff9800" : "none"}
               >
                 Master Setting <span>{isMasterOpen ? '▾' : '▸'}</span>
               </button>
+
 
               {isMasterOpen && (
                 <ul style={{
@@ -258,22 +274,20 @@ export default function MiniDrawer() {
               </Link>
             </li>
 
-            <li>
-              <button
-                onClick={handleLogout}
-                style={{
-                  background: 'none', color: 'white',
-                  border: 'none', width: '100%', textAlign: 'left',
-                  padding: '10px', borderRadius: '5px',
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  cursor: 'pointer'
-                }}
-                onMouseOver={(e) => e.target.style.background = "rgba(255, 255, 255, 0.2)"}
-                onMouseOut={(e) => e.target.style.background = "rgba(255, 255, 255, 0.05)"}
-              >
-                Sign Out
-              </button>
-            </li>
+            <button
+              onClick={handleLogout}
+              style={{
+                background: 'none', color: 'white',
+                border: 'none', width: '100%', textAlign: 'left',
+                padding: '10px', borderRadius: '5px',
+                background: 'rgba(255, 255, 255, 0.05)',
+                cursor: 'pointer'
+              }}
+              onMouseOver={(e) => e.target.style.background = "rgba(255, 255, 255, 0.2)"}
+              onMouseOut={(e) => e.target.style.background = "rgba(255, 255, 255, 0.05)"}
+            >
+              Sign Out
+            </button>
           </ul>
         </div>
 

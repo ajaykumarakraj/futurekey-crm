@@ -82,7 +82,7 @@ const Example = ({ data, columns, rowsPerPageOptions = [5, 10, 25] }) => {
                       sx={{ lineHeight: "initial", fontSize: "12px", padding: "5px 5px" }}
                       key={column.field}
                     >
-                      {row[column.field]}
+                      {column.renderCell ? column.renderCell(row) : row[column.field]}
                     </TableCell>
                   ))}
                 </TableRow>
