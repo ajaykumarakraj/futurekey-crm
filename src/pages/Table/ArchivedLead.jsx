@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Example from "./Example";
 import api from "../../component/api";
 import { useAuth } from "../../component/AuthContext";
-const CustomTable = () => {
+const ArchivedLead = () => {
   const [filters, setFilters] = useState({ teamLeader: "", agent: "", leadSource: "", project: "", customer: "", dateFrom: "", dateTo: "", sortBy: "newest" });
   const [data, setData] = useState([]);
 
@@ -17,7 +17,7 @@ const CustomTable = () => {
 
   const handleSearch = async (page = 1) => {
     try {
-      const payload = { lead_status: "2", page };
+      const payload = { lead_status: "4", page };
       // You can add additional filters here:
       // teamLeader: filters.teamLeader, etc.
       const res = await api.post('/get-lead-data', payload, {
@@ -191,4 +191,4 @@ const CustomTable = () => {
   )
 };
 
-export default CustomTable;
+export default ArchivedLead;

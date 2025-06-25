@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Example from "./Example";
 import api from "../../component/api";
 import { useAuth } from "../../component/AuthContext";
-const CustomTable = () => {
+const InProgressLead = () => {
   const [filters, setFilters] = useState({ teamLeader: "", agent: "", leadSource: "", project: "", customer: "", dateFrom: "", dateTo: "", sortBy: "newest" });
   const [data, setData] = useState([]);
 
@@ -191,4 +191,4 @@ const CustomTable = () => {
   )
 };
 
-export default CustomTable;
+export default InProgressLead;

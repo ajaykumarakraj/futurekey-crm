@@ -40,20 +40,18 @@ const Dashboard = () => {
 
 
     const cards = [
-        { title: 'New Leads', key: 'new_lead', path: '/leads/table' },
-        { title: 'In Process', key: 'in_process', path: '/leads/hot' },
+        { title: ' Fresh Lead', key: 'fresh_lead', path: '/leads/fresh' },
+        { title: 'New Leads', key: 'new_lead', path: '/leads/new' },
+        { title: 'In Process', key: 'in_process', path: '/leads/inprogress' },
         { title: 'Hot Leads', key: 'hot_lead', path: '/leads/hot' },
-        { title: 'Archived Lead', key: 'archived_lead', path: '/table' },
-        { title: 'Converted', key: 'converted', path: '/table' },
-        { title: 'Hot Lead', key: 'hot_lead', path: '/table' },
+        { title: 'Archived Lead', key: 'archived_lead', path: '/leads/archived' },
+        { title: 'Converted', key: 'converted', path: '/leads/converted' },
 
-        { title: 'Missed Follow Up', key: 'missed_follow_up', path: '/table' },
-        { title: 'Scheduled Site Visit', key: "scheduled_site_visit", path: '/table' },
-        { title: 'Today Follow Up', key: 'today_follow_up', path: '/table' },
-        { title: 'Today Site Visit', key: 'today_site_visit', path: '/table' },
-        { title: 'Tomorrow Site Visit', key: 'tomorrow_site_visit', path: '/table' },
-
-
+        { title: 'Missed Follow Up', key: 'missed_follow_up', path: '/leads/missedfollowup' },
+        { title: 'Scheduled Site Visit', key: "scheduled_site_visit", path: '/lead/scheduledsite' },
+        { title: 'Today Follow Up', key: 'today_follow_up', path: '/lead/todayfollow' },
+        { title: 'Today Site Visit', key: 'today_site_visit', path: '/lead/TodaySiteVisit' },
+        { title: 'Tomorrow Site Visit', key: 'tomorrow_site_visit', path: '/lead/TommorowSiteVisit' },
         { title: 'Create Lead', key: null, path: '/leads/create' },
         { title: 'Bulk Upload', key: null, path: '/leads/bulk-upload' },
         { title: 'Table View', key: null, path: '/table' },

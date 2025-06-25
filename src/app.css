@@ -10,3 +10,7 @@ select,
 input {
     height: initial !important;
 }
+
+table {
+    border-collapse: collapse;
+}

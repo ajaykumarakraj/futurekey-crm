@@ -11,7 +11,8 @@ export default function MiniDrawer() {
 
   const handleLeadsClick = () => setIsLeadsOpen((prev) => !prev);
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
     window.location.href = "/sign-in";
   };
 
@@ -176,7 +177,7 @@ export default function MiniDrawer() {
 
             </li>
             {/* Master setting Menu */}
-            <li style={{ marginBottom: '15px' }}>
+            {/* <li style={{ marginBottom: '15px' }}>
               <button
                 onClick={() => setMasterOpen((prev) => !prev)}
                 style={{
@@ -222,6 +223,23 @@ export default function MiniDrawer() {
                 </ul>
               )}
 
+            </li> */}
+            {/* Master Setting */}
+            <li style={{ marginBottom: '15px' }}>
+              <Link
+                to="/mastersetting"
+                style={{
+                  color: 'white', textDecoration: 'none',
+                  display: 'flex', alignItems: 'center',
+                  padding: '10px', borderRadius: '5px',
+                  background: location.pathname === "/mastersetting" ? "#ff9800" : "none",
+                  transition: 'background 0.3s'
+                }}
+                onMouseOver={(e) => e.target.style.background = "#ff9800"}
+                onMouseOut={(e) => e.target.style.background = location.pathname === "/table" ? "#ff9800" : "none"}
+              >
+                Master Setting
+              </Link>
             </li>
             {/* Table Menu */}
             <li style={{ marginBottom: '15px' }}>
