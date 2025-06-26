@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import '../app.css';
 import api from "../component/api";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function UpdateUserForm() {
+
     const { id } = useParams(); // Get user_id from route
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
@@ -25,7 +27,7 @@ function UpdateUserForm() {
                 });
 
                 if (res.data.status === 200 && typeof res.data.data === "object") {
-                    console.log("role data", res.data.data.role)
+                    // console.log("role data", res.data.data.role)
                     const user = res.data.data;
                     setName(user.name || "");
                     setPhone(user.phone || "");
@@ -37,10 +39,10 @@ function UpdateUserForm() {
                     setDeviceLogin(user.login_device?.toString() || "1");
                     setTeamLeaderList(user.all_team_leader || []);
                 } else {
-                    console.warn("Unexpected user response:", res.data);
+                    toast.error("Unexpected user response:", res.data)
                 }
             } catch (error) {
-                console.error("Error loading user:", error.response?.data || error.message);
+                toast.error("Error loading user:", error.response?.data || error.message);
             }
         };
 
@@ -70,17 +72,18 @@ function UpdateUserForm() {
             });
 
             if (res.data.status === 200) {
-                alert("User updated successfully");
+                toast.success("User updated successfully");
+
             } else {
-                alert("Failed to update user");
-                console.warn("Unexpected response:", res.data);
+                toast.error("Failed to update user");
+                // toast.error("Unexpected response:", res.data);
             }
         } catch (error) {
-            console.error("Error submitting form:", error.response?.data || error.message);
-            alert("Error submitting form");
+            // console.error("Error submitting form:", error.response?.data || error.message);
+            toast.error("Error submitting form");
         }
     };
-    console.log("id data another page", id)
+    // console.log("id data another page", id)
 
     return (
         <div style={{
@@ -214,6 +217,7 @@ function UpdateUserForm() {
                     </button>
                 </div>
             </form>
+            <ToastContainer />
         </div>
     );
 }

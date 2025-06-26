@@ -28,19 +28,19 @@ const SignInPage = () => {
     try {
       const response = await axios.post('https://api.almonkdigital.in/api/send-login-otp', { mobile });
       const data = response.data;
-      console.log(data);
+      // console.log(data);
 
       if (data.status === 200) {
         // Store auth token or user data if needed
 
-        console.log("run this", data.status);
+        // console.log("run this", data.status);
         setError('');
         navigate('/verifyOtp', { state: { mobile } });
       } else {
         setError(data.message || 'Login failed. Please check the mobile number.');
       }
     } catch (err) {
-      console.error('Login error:', err);
+      // console.error('Login error:', err);
       setError('Something went wrong. Please try again later.');
     }
   };
@@ -96,13 +96,13 @@ const SignInPage = () => {
           >
             Send OTP
           </Button>
-          <Grid container justifyContent="flex-end">
+          {/* <Grid container justifyContent="flex-end">
             <Grid item>
               <Link href="#" variant="body2">
                 Forgot password?
               </Link>
             </Grid>
-          </Grid>
+          </Grid> */}
         </Box>
       </Paper>
     </Container>

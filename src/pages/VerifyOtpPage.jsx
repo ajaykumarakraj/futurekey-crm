@@ -45,7 +45,7 @@ const VerifyOtpPage = () => {
                 setError(res.data.message || 'Invalid OTP');
             }
         } catch (error) {
-            console.error('Verification error:', error);
+            // console.error('Verification error:', error);
             setError('Error verifying OTP');
         }
     };

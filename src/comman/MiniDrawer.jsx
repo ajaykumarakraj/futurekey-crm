@@ -22,19 +22,19 @@ export default function MiniDrawer() {
       <div style={{
         height: '60px', background: '#1e1e1e', color: 'white',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '0 20px', boxShadow: '0 2px 5px 0px #000'
+        padding: '15px 20px', boxShadow: '0 2px 5px 0px #000'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <button
+          {/* <button
             onClick={() => setIsOpen((prev) => (!prev))}
             style={{ background: 'none', color: 'white', border: 'none', fontSize: '24px', cursor: 'pointer' }}>
             ☰
-          </button>
+          </button> */}
           <h1 style={{ margin: '0', fontSize: '1.5rem' }}>My Dashboard</h1>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           {/* User Profile or icon can go here */}
-          <span style={{ fontSize: '24px', cursor: 'pointer' }}>👤</span>
+          {/* <span style={{ fontSize: '24px', cursor: 'pointer' }}>👤</span> */}
         </div>
       </div>
 
@@ -97,27 +97,27 @@ export default function MiniDrawer() {
                   listStyle: 'none', padding: '10px 20px', margin: '0',
                   background: 'rgba(0, 0, 0, 0.3)', borderRadius: '5px'
                 }}>
-                  <li style={{
+                  <Link to="/leads/create" style={{ color: 'white', textDecoration: 'none' }}> <li style={{
                     marginBottom: '10px', padding: '8px 12px',
                     borderLeft: '4px solid #ff9800',
                     background: 'rgba(0, 0, 0, 0.2)', borderRadius: '5px'
                   }}>
-                    <Link to="/leads/create" style={{ color: 'white', textDecoration: 'none' }}>Create New</Link>
-                  </li>
-                  <li style={{
+                    Create New
+                  </li></Link>
+                  <Link to="/leads/bulk-upload" style={{ color: 'white', textDecoration: 'none' }}><li style={{
                     marginBottom: '10px', padding: '8px 12px',
                     borderLeft: '4px solid #ff9800',
                     background: 'rgba(0, 0, 0, 0.2)', borderRadius: '5px'
                   }}>
-                    <Link to="/leads/bulk-upload" style={{ color: 'white', textDecoration: 'none' }}>Bulk Upload</Link>
-                  </li>
-                  <li style={{
+                    Bulk Upload
+                  </li></Link>
+                  <Link to="/leads/table" style={{ color: 'white', textDecoration: 'none' }}>   <li style={{
                     marginBottom: '10px', padding: '8px 12px',
                     borderLeft: '4px solid #ff9800',
                     background: 'rgba(0, 0, 0, 0.2)', borderRadius: '5px'
                   }}>
-                    <Link to="/leads/table" style={{ color: 'white', textDecoration: 'none' }}>Leads Table</Link>
-                  </li>
+                    Leads Table
+                  </li></Link>
 
                 </ul>
               )}
@@ -151,20 +151,20 @@ export default function MiniDrawer() {
                   listStyle: 'none', padding: '10px 20px', margin: '0',
                   background: 'rgba(0, 0, 0, 0.3)', borderRadius: '5px'
                 }}>
-                  <li style={{
+                  <Link to="user/form" style={{ color: 'white', textDecoration: 'none' }}> <li style={{
                     marginBottom: '10px', padding: '8px 12px',
                     borderLeft: '4px solid #ff9800',
                     background: 'rgba(0, 0, 0, 0.2)', borderRadius: '5px'
                   }}>
-                    <Link to="user/form" style={{ color: 'white', textDecoration: 'none' }}>Add New User</Link>
-                  </li>
-                  <li style={{
+                    Add New User
+                  </li></Link>
+                  <Link to="user/table" style={{ color: 'white', textDecoration: 'none' }}>   <li style={{
                     marginBottom: '10px', padding: '8px 12px',
                     borderLeft: '4px solid #ff9800',
                     background: 'rgba(0, 0, 0, 0.2)', borderRadius: '5px'
                   }}>
-                    <Link to="user/table" style={{ color: 'white', textDecoration: 'none' }}>View All User</Link>
-                  </li>
+                    View All User
+                  </li></Link>
                   {/* <li style={{
                     marginBottom: '10px', padding: '8px 12px',
                     borderLeft: '4px solid #ff9800',
@@ -258,9 +258,25 @@ export default function MiniDrawer() {
                 Table
               </Link>
             </li>
-
-            {/* Setting Section */}
+            {/* Table Menu */}
             <li style={{ marginBottom: '15px' }}>
+              <Link
+                to="/support"
+                style={{
+                  color: 'white', textDecoration: 'none',
+                  display: 'flex', alignItems: 'center',
+                  padding: '10px', borderRadius: '5px',
+                  background: location.pathname === "/support" ? "#ff9800" : "none",
+                  transition: 'background 0.3s'
+                }}
+                onMouseOver={(e) => e.target.style.background = "#ff9800"}
+                onMouseOut={(e) => e.target.style.background = location.pathname === "/support" ? "#ff9800" : "none"}
+              >
+                Contact Support
+              </Link>
+            </li>
+            {/* Setting Section */}
+            {/* <li style={{ marginBottom: '15px' }}>
               <Link
                 to="/change-password"
                 style={{
@@ -274,35 +290,22 @@ export default function MiniDrawer() {
               >
                 Change Password
               </Link>
-            </li>
+            </li> */}
 
-            <li style={{ marginBottom: '15px' }}>
-              <Link
-                to="/support"
-                style={{
-                  color: 'white', textDecoration: 'none',
-                  padding: '10px', borderRadius: '5px',
-                  background: location.pathname === "/support" ? "#ff9800" : "none",
-                  transition: 'background 0.3s'
-                }}
-                onMouseOver={(e) => e.target.style.background = "#ff9800"}
-                onMouseOut={(e) => e.target.style.background = location.pathname === "/support" ? "#ff9800" : "none"}
-              >
-                Contact Support
-              </Link>
-            </li>
+
 
             <button
               onClick={handleLogout}
               style={{
-                background: 'none', color: 'white',
+                color: 'white',
+                // background: 'none', color: 'white',
                 border: 'none', width: '100%', textAlign: 'left',
                 padding: '10px', borderRadius: '5px',
-                background: 'rgba(255, 255, 255, 0.05)',
+                background: 'rgba(0, 222, 155, 0.05)',
                 cursor: 'pointer'
               }}
-              onMouseOver={(e) => e.target.style.background = "rgba(255, 255, 255, 0.2)"}
-              onMouseOut={(e) => e.target.style.background = "rgba(255, 255, 255, 0.05)"}
+              onMouseOver={(e) => e.target.style.background = "#ff9800"}
+              onMouseOut={(e) => e.target.style.background = "rgba(45, 4, 106, 0.05)"}
             >
               Sign Out
             </button>

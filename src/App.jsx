@@ -57,16 +57,16 @@ const App = () => {
         <Route path='/lead/todayfollow' element={<TodayFollow />} />
         <Route path='/lead/TodaySiteVisit' element={<TodaySiteVisit />} />
         <Route path='/lead/TommorowSiteVisit' element={<TommorowSiteVisit />} />
-        <Route path="leads/create" element={<CreateForm />} />
-        <Route path="leads/bulk-upload" element={<WalkUpload />} />
-        <Route path="leads/table" element={<CustomTable />} />
-        <Route path="user/table" element={<UserMangementTable />} />
-        <Route path="user/form" element={<UserForm />} />
-        <Route path="user/update/:id" element={<UpdateUserForm />} />
-        <Route path="table" element={<CustomTable />} />
-        <Route path="change-password" element={<ChangePassword />} />
-        <Route path="support" element={<ContactSupport />} />
-        <Route path="mastersetting" element={<MasterSetting />} />
+        <Route path="/leads/create" element={<CreateForm />} />
+        <Route path="/leads/bulk-upload" element={<WalkUpload />} />
+        <Route path="/leads/table" element={<CustomTable />} />
+        <Route path="/user/table" element={<UserMangementTable />} />
+        <Route path="/user/form" element={<UserForm />} />
+        <Route path="/user/update/:id" element={<UpdateUserForm />} />
+        <Route path="/table" element={<CustomTable />} />
+        <Route path="/change-password" element={<ChangePassword />} />
+        <Route path="/support" element={<ContactSupport />} />
+        <Route path="/mastersetting" element={<MasterSetting />} />
       </Route>
 
       {/* Fallback */}

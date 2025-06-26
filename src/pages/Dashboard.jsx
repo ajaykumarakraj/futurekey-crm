@@ -19,7 +19,7 @@ const Dashboard = () => {
 
     const fetchDashboardData = async () => {
         try {
-            console.log("jhfdjhufhjk", user.user_id)
+
             const res = await api.get(`/get-home-screen-data`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -27,7 +27,7 @@ const Dashboard = () => {
             });
             if (res.data.status === 200) {
                 setData(res.data.data);
-                console.log("test", res.data.data)
+                // console.log("test", res.data.data)
             }
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
@@ -58,8 +58,7 @@ const Dashboard = () => {
         { title: 'Support', key: null, path: '/support' },
         { title: 'Change Password', key: null, path: '/change-password' },
     ];
-    console.log("User:", user);
-    console.log("Token:", token);
+
     return (
         <Box sx={{ padding: 3, backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
             <Grid container spacing={3} justifyContent="center">

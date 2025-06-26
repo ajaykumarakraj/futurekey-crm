@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import axios from "axios";
 import api from "../component/api";
 import imgad from "../assets/images/delete.png"
@@ -39,11 +42,11 @@ const MasterSetting = () => {
                 },
             })
             if (delres.data.status === 200) {
-                alert(delres.data.message);
+                toast.error(delres.data.message);
                 getData();
             }
         } catch (error) {
-            alert("Something went wrong.", error);
+            toast.error("Something went wrong.", error);
         }
     }
     const handleSubmit = async (e) => {
@@ -65,15 +68,16 @@ const MasterSetting = () => {
             );
 
             if (res.data.status === 200) {
-                alert(res.data.message);
+                // alert(res.data.message);
+                toast.success(res.data.message);
                 setValue("");
                 getData();
             } else {
-                alert("Failed to add master setting.");
+                toast.error("Failed to add master setting.");
             }
         } catch (error) {
-            console.error("Submit error:", error);
-            alert("Something went wrong.");
+            // console.error("Submit error:", error);
+            toast.error("Something went wrong.");
         }
     };
 
@@ -141,7 +145,9 @@ const MasterSetting = () => {
             {renderTable("Require Measurement", measurements)}
             {renderTable("Lead Source", leadSources)}
             {renderTable("Archived Reason", archivedReasons)}
+            <ToastContainer />
         </div>
+
     );
 };
 

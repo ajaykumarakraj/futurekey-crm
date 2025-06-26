@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import '../app.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import api from "../component/api";
 
 function UserForm() {
+
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [gender, setGender] = useState("");
@@ -13,27 +16,7 @@ function UserForm() {
     const [deviceLogin, setDeviceLogin] = useState("1");
     const [crmAccess, setCrmAccess] = useState("1");
 
-    useEffect(() => {
-        const loadTeamLeader = async () => {
-            try {
-                const resapi = await api.get("/get-team-leader", {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`
-                    }
-                });
-                if (resapi.data.status === 200 && Array.isArray(resapi.data.data)) {
-                    setTeamLeaderList(resapi.data.data);
-                    console.log("Team Leaders:", resapi.data.data);
-                } else {
-                    console.warn("Unexpected team leader response:", resapi.data);
-                }
-            } catch (error) {
-                console.error("Error fetching team leaders:", error.response?.data || error.message);
-            }
-        };
 
-        loadTeamLeader();
-    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -48,16 +31,16 @@ function UserForm() {
             crm_app_access: crmAccess,
             login_device: deviceLogin,
         };
-        console.log(formData)
+        // console.log(formData)
         try {
-            const res = await api.post(`/update-user/${id}`, formData, {
+            const res = await api.post(`/add-user`, formData, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
             });
 
             if (res.data.status === 200) {
-                alert("User added successfully");
+                toast.success("User added successfully");
 
                 // Reset form
                 setName("");
@@ -69,12 +52,12 @@ function UserForm() {
                 setCrmAccess("1");
                 setDeviceLogin("1");
             } else {
-                alert("Failed to add user");
-                console.warn("Unexpected response:", res.data);
+                toast.error("Failed to add user");
+                // console.warn("Unexpected response:", res.data);
             }
         } catch (error) {
-            console.error("Error submitting form:", error.response?.data || error.message);
-            alert("Error submitting form");
+            // console.error("Error submitting form:", error.response?.data || error.message);
+            toast.error("Error submitting form");
         }
     };
 
@@ -226,6 +209,7 @@ function UserForm() {
                     </button>
                 </div>
             </form>
+            <ToastContainer />
         </div>
     );
 }

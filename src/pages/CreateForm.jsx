@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const CreateForm = () => {
   const [name, setName] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
@@ -25,7 +26,7 @@ const CreateForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name || !number || !selectedGender || !selectedCity || !selectCustomer) {
-      alert("Please fill all the required fields.");
+      toast.error("Please fill all the required fields.");
       return;
     }
 
@@ -51,64 +52,81 @@ const CreateForm = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      console.log("Success:", res.data);
-      alert("Client added successfully!");
+
+      // console.log("Success:", res.data);
+      toast.success("Client added successfully!");
+      setName("")
+      setSelectedGender("")
+      setAgent("")
+      setTeamLeader("")
+      setProject("")
+      setLeadSource("")
+      setRequirement("")
+      setSelectCustomer("")
+      setSelectedCity("")
+      setAltnumber("")
+      setNumber("")
+
     } catch (error) {
-      console.error("Error posting data:", error);
-      alert("Failed to add client. Please try again.");
+      // console.error("Error posting data:", error);
+      toast.error("Failed to add client. Please try again.");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={styles.form}>
-      <h1 style={{ margin: 0 }}>Create New Cleint</h1>
-      <input style={styles.input} type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" />
+    <>
+      <form onSubmit={handleSubmit} style={styles.form}>
+        <h1 style={{ margin: 0 }}>Create New Cleint</h1>
+        <input style={styles.input} type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" />
 
-      <select style={styles.select} value={selectedGender} onChange={(e) => setSelectedGender(e.target.value)}>
-        <option value="">Select Gender</option>
-        {genderData.map(g => <option key={g} value={g}>{g}</option>)}
-      </select>
+        <select style={styles.select} value={selectedGender} onChange={(e) => setSelectedGender(e.target.value)}>
+          <option value="">Select Gender</option>
+          {genderData.map(g => <option key={g} value={g}>{g}</option>)}
+        </select>
 
-      <input style={styles.input} type="text" value={number} onChange={(e) => setNumber(e.target.value)} placeholder="Mobile No." />
-      <input style={styles.input} type="text" value={altnumber} onChange={(e) => setAltnumber(e.target.value)} placeholder="Alt Mobile No." />
+        <input style={styles.input} type="text" value={number} onChange={(e) => setNumber(e.target.value)} placeholder="Mobile No." />
+        <input style={styles.input} type="text" value={altnumber} onChange={(e) => setAltnumber(e.target.value)} placeholder="Alt Mobile No." />
 
-      <select style={styles.select} value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)}>
-        <option value="">Select City</option>
-        {cityData.map(c => <option key={c} value={c}>{c}</option>)}
-      </select>
+        <select style={styles.select} value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)}>
+          <option value="">Select City</option>
+          {cityData.map(c => <option key={c} value={c}>{c}</option>)}
+        </select>
 
-      <select style={styles.select} value={selectCustomer} onChange={(e) => setSelectCustomer(e.target.value)}>
-        <option value="">Customer Type</option>
-        {customerTypeData.map(ct => <option key={ct} value={ct}>{ct}</option>)}
-      </select>
+        <select style={styles.select} value={selectCustomer} onChange={(e) => setSelectCustomer(e.target.value)}>
+          <option value="">Customer Type</option>
+          {customerTypeData.map(ct => <option key={ct} value={ct}>{ct}</option>)}
+        </select>
 
-      <select style={styles.select} value={requirement} onChange={(e) => setRequirement(e.target.value)}>
-        <option value="">Requirement</option>
-        {requirementData.map(r => <option key={r} value={r}>{r}</option>)}
-      </select>
+        <select style={styles.select} value={requirement} onChange={(e) => setRequirement(e.target.value)}>
+          <option value="">Requirement</option>
+          {requirementData.map(r => <option key={r} value={r}>{r}</option>)}
+        </select>
 
-      <select style={styles.select} value={leadSource} onChange={(e) => setLeadSource(e.target.value)}>
-        <option value="">Lead Source</option>
-        {leadSourceData.map(ls => <option key={ls} value={ls}>{ls}</option>)}
-      </select>
+        <select style={styles.select} value={leadSource} onChange={(e) => setLeadSource(e.target.value)}>
+          <option value="">Lead Source</option>
+          {leadSourceData.map(ls => <option key={ls} value={ls}>{ls}</option>)}
+        </select>
 
-      <select style={styles.select} value={project} onChange={(e) => setProject(e.target.value)}>
-        <option value="">Project</option>
-        {projectData.map(p => <option key={p} value={p}>{p}</option>)}
-      </select>
+        <select style={styles.select} value={project} onChange={(e) => setProject(e.target.value)}>
+          <option value="">Project</option>
+          {projectData.map(p => <option key={p} value={p}>{p}</option>)}
+        </select>
 
-      <select style={styles.select} value={teamLeader} onChange={(e) => setTeamLeader(e.target.value)}>
-        <option value="">Team Leader</option>
-        {personData.map(p => <option key={p} value={p}>{p}</option>)}
-      </select>
+        <select style={styles.select} value={teamLeader} onChange={(e) => setTeamLeader(e.target.value)}>
+          <option value="">Team Leader</option>
+          {personData.map(p => <option key={p} value={p}>{p}</option>)}
+        </select>
 
-      <select style={styles.select} value={agent} onChange={(e) => setAgent(e.target.value)}>
-        <option value="">Agent</option>
-        {personData.map(p => <option key={p} value={p}>{p}</option>)}
-      </select>
+        <select style={styles.select} value={agent} onChange={(e) => setAgent(e.target.value)}>
+          <option value="">Agent</option>
+          {personData.map(p => <option key={p} value={p}>{p}</option>)}
+        </select>
 
-      <button style={styles.button} type="submit">Save</button>
-    </form>
+        <button style={styles.button} type="submit">Save</button>
+      </form>
+      <ToastContainer />
+    </>
+
   );
 };
 
