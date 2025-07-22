@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import Swal from 'sweetalert2';
 import axios from "axios";
+
 import api from "../component/api";
 import imgad from "../assets/images/delete.png"
 const MasterSetting = () => {
@@ -26,6 +27,7 @@ const MasterSetting = () => {
 
             if (res.data.status === 200) {
                 const allData = res.data.data;
+
                 setMeasurements(allData.filter(item => item.cat_name === "Require Measurement"));
                 setLeadSources(allData.filter(item => item.cat_name === "Lead Source"));
                 setArchivedReasons(allData.filter(item => item.cat_name === "Archived Reason"));
@@ -34,21 +36,37 @@ const MasterSetting = () => {
             console.error("Error fetching data", error);
         }
     };
+
+
     const handleDelete = async (id) => {
-        try {
-            const delres = await api.get(`/delete-master-setting/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            })
-            if (delres.data.status === 200) {
-                toast.error(delres.data.message);
-                getData();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const delres = await api.get(`/delete-master-setting/${id}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        },
+                    });
+
+                    if (delres.data.status === 200) {
+                        toast.error(delres.data.message);
+                        getData();
+                    }
+                } catch (error) {
+                    toast.error("Something went wrong.");
+                }
             }
-        } catch (error) {
-            toast.error("Something went wrong.", error);
-        }
-    }
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!category || !value) return alert("Please select a category and enter a value.");
@@ -112,7 +130,7 @@ const MasterSetting = () => {
             <form onSubmit={handleSubmit} style={styles.form}>
                 <div style={styles.formGroup}>
                     <label style={styles.label}>Select Category:</label>
-                    <select
+                    <select className="p-0"
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
                         required
@@ -202,7 +220,7 @@ const styles = {
     button: {
         backgroundColor: "#003961",
         color: "#fff",
-        padding: "12px 20px",
+        padding: "5px 20px",
         fontSize: "16px",
         border: "none",
         borderRadius: "6px",

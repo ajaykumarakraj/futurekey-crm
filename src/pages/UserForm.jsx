@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react";
+
 import '../app.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import api from "../component/api";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from "axios";
 
 function UserForm() {
-
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [gender, setGender] = useState("");
     const [email, setEmail] = useState("");
-    const [role, setRole] = useState("1");
-    const [teamLeaderList, setTeamLeaderList] = useState([]); // ✅ for list
-    const [selectedTeamLeader, setSelectedTeamLeader] = useState(""); // ✅ for selected leader
-    const [deviceLogin, setDeviceLogin] = useState("1");
-    const [crmAccess, setCrmAccess] = useState("1");
+    const [role, setRole] = useState("");
+    const [teamLeaderList, setTeamLeaderList] = useState([]);
+    const [selectedTeamLeader, setSelectedTeamLeader] = useState("");
+    const [deviceLogin, setDeviceLogin] = useState("");
+    const [crmAccess, setCrmAccess] = useState("");
 
 
 
@@ -31,7 +33,7 @@ function UserForm() {
             crm_app_access: crmAccess,
             login_device: deviceLogin,
         };
-        // console.log(formData)
+        console.log("send data", formData)
         try {
             const res = await api.post(`/add-user`, formData, {
                 headers: {
@@ -41,176 +43,188 @@ function UserForm() {
 
             if (res.data.status === 200) {
                 toast.success("User added successfully");
-
-                // Reset form
-                setName("");
-                setPhone("");
-                setGender("");
-                setEmail("");
-                setRole("1");
-                setSelectedTeamLeader("");
-                setCrmAccess("1");
-                setDeviceLogin("1");
+                resetForm();
             } else {
                 toast.error("Failed to add user");
-                // console.warn("Unexpected response:", res.data);
             }
         } catch (error) {
-            // console.error("Error submitting form:", error.response?.data || error.message);
             toast.error("Error submitting form");
         }
     };
 
+    const resetForm = () => {
+        setName("");
+        setPhone("");
+        setGender("");
+        setEmail("");
+        setRole("");
+        setSelectedTeamLeader("");
+        setCrmAccess("");
+        setDeviceLogin("");
+    };
+
+    const getteamLeader = async () => {
+        try {
+            const resTL = await axios.get("https://api.almonkdigital.in/api/admin/get-team-leader", {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            })
+            if (resTL.status === 200) {
+                setTeamLeaderList(resTL.data.data)
+                console.log(resTL.data.data)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
     return (
-        <div style={{
-            maxWidth: '500px',
-            margin: '50px auto',
-            padding: '30px',
-            borderRadius: '20px',
-            boxShadow: '0 0 20px 0px #0003',
-            background: '#ffffff'
-        }}>
-            <h2 style={{ textAlign: 'center', marginBottom: '30px', color: '#334' }}>Add  User</h2>
+        <div className="container">
+            <h2 className="mb-4 text-center textsize">Add User</h2>
+            <form onSubmit={handleSubmit} className="p-4 border rounded shadow bg-white">
+                {/* Personal Details Section */}
+                <div className="border rounded p-3 mb-4">
+                    <h5 className="mb-3">Personal Details</h5>
+                    <div className="row">
+                        <div className="col-md-6 mb-3">
+                            <label>Full Name</label>
+                            <input
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                required
+                                className="form-control"
+                                placeholder="Full Name"
+                            />
+                        </div>
 
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: '20px' }}>
-                    <label htmlFor="name">Full Name</label>
-                    <input
-                        type="text"
-                        id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                        style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ddd' }}
-                    />
-                </div>
+                        <div className="col-md-6 mb-3">
+                            <label>Contact Number</label>
+                            <input
+                                type="text"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                                maxLength="10"
+                                required
+                                className="form-control"
+                                placeholder="Contact Number"
+                            />
+                        </div>
 
-                <div style={{ marginBottom: '20px' }}>
-                    <label htmlFor="phone">Contact Number</label>
-                    <input
-                        type="text"
-                        id="phone"
-                        maxLength="10"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        required
-                        style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ddd' }}
-                    />
-                </div>
+                        <div className="col-md-6 mb-3">
+                            <label>Gender</label>
+                            <select
+                                value={gender}
+                                onChange={(e) => setGender(e.target.value)}
+                                className="form-select"
+                            >
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
 
-                <div style={{ marginBottom: '20px' }}>
-                    <label htmlFor="gender">Gender</label>
-                    <select
-                        id="gender"
-                        value={gender}
-                        onChange={(e) => setGender(e.target.value)}
-                        style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ddd' }}
-                    >
-                        <option value="">Select Gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-                </div>
-
-                <div style={{ marginBottom: '20px' }}>
-                    <label htmlFor="email">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-
-                        style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ddd' }}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '20px' }}>
-                    <label htmlFor="role">Login Role</label>
-                    <select
-                        id="role"
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
-                        style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ddd' }}
-                    >
-                        <option value="1">Admin</option>
-                        <option value="2">Team Leader</option>
-                        <option value="3">Agent</option>
-                    </select>
-                </div>
-
-                {role === "3" && (
-                    <div style={{ marginBottom: '20px' }}>
-                        <label htmlFor="teamLeader">Select Team Leader</label>
-                        <select
-                            id="teamLeader"
-                            value={selectedTeamLeader}
-                            onChange={(e) => setSelectedTeamLeader(e.target.value)}
-                            style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ddd' }}
-                            required
-                        >
-                            <option value="1">Select Team Leader</option>
-                            {teamLeaderList.map((leader) => (
-                                <option key={leader.id} value={leader.user_id}>
-                                    {leader.name}
-                                </option>
-                            ))}
-                        </select>
+                        <div className="col-md-6 mb-3">
+                            <label>Email</label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="form-control"
+                                placeholder="Email"
+                            />
+                        </div>
                     </div>
-                )}
-
-                <div style={{ marginBottom: '20px' }}>
-                    <label htmlFor="crmAccess">CRM/APP Access</label>
-                    <select
-                        id="crmAccess"
-                        value={crmAccess}
-                        onChange={(e) => setCrmAccess(e.target.value)}
-                        style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ddd' }}
-                    >
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
-                    </select>
                 </div>
 
-                <div style={{ marginBottom: '20px' }}>
-                    <label htmlFor="singleDeviceLogin">Single Device Login Validation</label>
-                    <select
-                        id="singleDeviceLogin"
-                        value={deviceLogin}
-                        onChange={(e) => setDeviceLogin(e.target.value)}
-                        style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ddd' }}
-                    >
-                        <option value="1">Yes</option>
-                        <option value="0">No</option>
-                    </select>
+                {/* Login Details Section */}
+                <div className="border rounded p-3 mb-4">
+                    <h5 className="mb-3">Login Details</h5>
+                    <div className="row">
+                        <div className="col-md-6 mb-3">
+                            <label>Login Role</label>
+                            <select
+                                value={role}
+                                onChange={(e) => {
+                                    setRole(e.target.value);
+                                    getteamLeader()
+                                }}
+                                className="form-select"
+                            >
+                                <option value="">Select Role</option>
+                                <option value="1">Admin</option>
+                                <option value="2">Team Leader</option>
+                                <option value="3">Agent</option>
+                            </select>
+                        </div>
+
+                        {role === "3" && (
+                            <div className="col-md-6 mb-3">
+                                <label>Select Team Leader</label>
+                                <select
+                                    value={selectedTeamLeader}
+                                    onChange={(e) => setSelectedTeamLeader(e.target.value)}
+                                    className="form-select"
+                                    required
+                                >
+                                    <option value="">Select Team Leader</option>
+                                    {teamLeaderList.map((leader) => (
+                                        <option key={leader.user_id} value={leader.user_id}>
+                                            {leader.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+
+                        <div className="col-md-6 mb-3">
+                            <label>CRM/APP Access</label>
+                            <select
+                                value={crmAccess}
+                                onChange={(e) => setCrmAccess(e.target.value)}
+                                className="form-select"
+                            >
+                                <option value="">Select</option>
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                        </div>
+
+                        <div className="col-md-6 mb-3">
+                            <label>Single Device Login Validation</label>
+                            <select
+                                value={deviceLogin}
+                                onChange={(e) => setDeviceLogin(e.target.value)}
+                                className="form-select"
+                            >
+                                <option value="">Select</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
-                <div style={{ textAlign: 'right' }}>
+                <div className="text-end">
                     <button
                         type="button"
-                        onClick={() => {
-                            setName("");
-                            setPhone("");
-                            setGender("");
-                            setEmail("");
-                            setRole("1");
-                            setSelectedTeamLeader("");
-                            setCrmAccess("1");
-                            setDeviceLogin("1");
-                        }}
-                        style={{ padding: '10px 20px', marginRight: '10px', background: '#eee', border: 'none', borderRadius: '10px' }}
+                        onClick={resetForm}
+                        className="btn btn-secondary me-2"
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
-                        style={{ padding: '10px 20px', background: '#007bff', color: '#fff', border: 'none', borderRadius: '10px' }}
+                        className="btn btn-primary"
                     >
                         Save
                     </button>
                 </div>
-            </form>
+            </form >
             <ToastContainer />
-        </div>
+        </div >
     );
 }
 

@@ -154,7 +154,7 @@ const CustomTable = () => {
       </div>
 
       {/* Table Section */}
-      <Example data={data} columns={columns} rowsPerPageOptions={[10]} />
+      <Example data={data} columns={columns} rowsPerPageOptions={[50]} />
 
       {/* Enhanced Pagination Section */}
       <div style={{ marginTop: "20px", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>

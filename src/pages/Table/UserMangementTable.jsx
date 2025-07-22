@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Example from "../Table/Example";
 import api from "../../component/api";
 import { useNavigate } from "react-router-dom";
+
 const UserManagementTable = () => {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
@@ -10,9 +11,11 @@ const UserManagementTable = () => {
     const [nextPageURL, setNextPageURL] = useState(null);
     const [prevPageURL, setPrevPageURL] = useState(null);
     const [totalRecords, setTotalRecords] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     const handleSearch = async (url = "/user-list") => {
         try {
+            setLoading(true);
             let res;
             if (url.startsWith("https")) {
                 res = await fetch(url, {
@@ -31,20 +34,23 @@ const UserManagementTable = () => {
                     email: item.email,
                     phone: item.phone,
                     role: item.role,
+                    assign_team_leader: item.assign_team_leader
                 }));
 
                 setData(mapped);
-                setCurrentPage(res?.meta?.current_page);
-                setTotalPages(res?.meta?.last_page);
-                setTotalRecords(res?.meta?.total);
-                setNextPageURL(res?.meta?.next_page_url);
-                setPrevPageURL(res?.meta?.prev_page_url);
+                setCurrentPage(res?.meta?.current_page || 1);
+                setTotalPages(res?.meta?.last_page || 1);
+                setTotalRecords(res?.meta?.total || 0);
+                setNextPageURL(res?.meta?.next_page_url || null);
+                setPrevPageURL(res?.meta?.prev_page_url || null);
             } else {
                 console.error('API did not return expected format');
                 setData([]);
             }
         } catch (error) {
             console.error("Fetching Error", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -57,14 +63,18 @@ const UserManagementTable = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const handleEdit = (row) => {
+        navigate(`/user/update/${row.id}`);
+    };
+
     const columns = [
         { field: "id", headerName: "User ID", align: "center" },
         { field: "name", headerName: "Name", align: "left" },
         { field: "email", headerName: "Email", align: "left" },
         { field: "phone", headerName: "Contact Number", align: "center" },
         { field: "role", headerName: "Role", align: "center" },
+        { field: "assign_team_leader", headerName: "Team Leader", align: "center" },
         {
-            // field: "actions",
             headerName: "Actions",
             align: "center",
             renderCell: (row) => (
@@ -84,15 +94,22 @@ const UserManagementTable = () => {
             )
         }
     ];
-    const handleEdit = (row) => {
-        navigate(`/user/update/${row.id}`);
-    };
+
     return (
         <div>
-            {/* Table Section */}
-            <Example data={data} columns={columns} rowsPerPageOptions={[10]} />
+            {/* Show total records */}
+            <p style={{ textAlign: "center", fontWeight: "bold" }}>
+                Total Records: {totalRecords}
+            </p>
 
-            {/* Enhanced Pagination Section */}
+            {/* Table Section */}
+            {loading ? (
+                <p style={{ textAlign: "center" }}>Loading...</p>
+            ) : (
+                <Example data={data} columns={columns} rowsPerPageOptions={[20]} />
+            )}
+
+            {/* Pagination Section */}
             <div style={{
                 marginTop: "20px",
                 display: "flex",

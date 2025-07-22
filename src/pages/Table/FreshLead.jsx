@@ -2,8 +2,20 @@ import React, { useState, useEffect } from "react";
 import Example from "./Example";
 import api from "../../component/api";
 import { useAuth } from "../../component/AuthContext";
-
+import axios from "axios";
+import { Token } from "@mui/icons-material";
+import "../../app.css"
 const FreshLead = () => {
+  const { Token } = useAuth()
+  const [data, setData] = useState([]);
+  const [selectedLeads, setSelectedLeads] = useState([]);
+  const [teamleader, setTeamLeader] = useState([])
+  const [agent, setAgent] = useState([])
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [teamleaderId, setTeamLeaderId] = useState()
+  const [agentId, setAgentId] = useState()
   const [filters, setFilters] = useState({
     teamLeader: "",
     agent: "",
@@ -15,18 +27,50 @@ const FreshLead = () => {
     sortBy: "newest"
   });
 
-  const [data, setData] = useState([]);
-  const [selectedLeads, setSelectedLeads] = useState([]);
+  useEffect(() => {
+    teamLeader();
+  }, [])
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalRecords, setTotalRecords] = useState(0);
+  const teamLeader = async () => {
+    try {
+      const teamleaderres = await axios.get("https://api.almonkdigital.in/api/admin/get-team-leader", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      })
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
+      if (teamleaderres.status === 200) {
+        console.log(teamleaderres.data.data)
+        setTeamLeader(teamleaderres.data.data)
+      }
+    } catch (error) {
+      console.log(error)
+    }
   };
-
+  const handleFilterChange = async (e) => {
+    const teamleaderId = e.target.value
+    setTeamLeaderId(teamleaderId)
+    console.log("id", teamleaderId)
+    try {
+      const agentRes = await axios.get(`https://api.almonkdigital.in/api/admin/get-agent/${teamleaderId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      if (agentRes.status === 200) {
+        console.log("agent", agentRes.data.data)
+        setAgent(agentRes.data.data)
+      }
+    }
+    catch (error) {
+      console.log(error)
+    }
+  }
+  const handleAgent = async (e) => {
+    const AgentId = e.target.value
+    console.log("AgentId", AgentId)
+    setAgentId(AgentId)
+  }
   const handleSearch = async (page = 1) => {
     try {
       const payload = {
@@ -80,15 +124,19 @@ const FreshLead = () => {
 
   const handleTransfer = async () => {
     try {
-      console.log(filters.teamLeader, filters.agent)
+      // console.log(filters.teamLeader, filters.agent)
       const payload = {
 
         lead_id: selectedLeads,
-        tl_id: filters.teamLeader,
+        tl_id: teamleaderId,
         project_id: "56",
-        agent_id: filters.agent,
+        agent_id: agentId,
       };
-
+      console.log(payload)
+      if (!teamleaderId) {
+        alert("Please select a Team Leader before transferring leads.");
+        return;
+      }
       const res = await api.post("/assign-lead", payload, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -96,7 +144,15 @@ const FreshLead = () => {
       });
 
       if (res?.status === 200) {
-        console.log(res.data)
+
+
+
+
+        console.log("response show", res.data)
+
+
+
+
         alert("Leads transferred successfully!");
         setSelectedLeads([]);
         handleSearch(currentPage);
@@ -164,7 +220,7 @@ const FreshLead = () => {
     }
     return pageNumbers;
   }
-  console.log(selectedLeads)
+
   return (
     <div>
       {/* Filter Section */}
@@ -185,18 +241,28 @@ const FreshLead = () => {
             alignItems: "center"
           }}
         >
-          <select name="teamLeader" onChange={handleFilterChange} value={filters.teamLeader}>
+          <select name="teamLeader" onChange={handleFilterChange} >
             <option value="">Select Team Leader</option>
-            <option value="Tom">Tom</option>
-            <option value="Bob">Bob</option>
+            {
+              teamleader.map((value, key) =>
+                <option key={key} value={value.user_id}>{value.name}</option>
+              )
+            }
+
+
           </select>
 
-          <select name="agent" onChange={handleFilterChange} value={filters.agent}>
+          <select onChange={handleAgent}>
             <option value="">Select Agent</option>
-            <option value="Agent X">Agent X</option>
-            <option value="Agent Y">Agent Y</option>
+
+            {
+              agent.map((v, key) =>
+                <option value={v.id} key={key}>{v.name}</option>
+              )
+            }
+
           </select>
-          <button type="button" onClick={() => handleSearch(1)}>Search</button>
+          {/* <button type="button" onClick={() => handleSearch(1)}>Submit</button> */}
         </form>
       </div>
 

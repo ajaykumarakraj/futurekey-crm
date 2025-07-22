@@ -1,32 +1,127 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import api from "../component/api";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "../app.css"
+
 const CreateForm = () => {
+
   const [name, setName] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
   const [number, setNumber] = useState("");
   const [altnumber, setAltnumber] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedState, setSelectedState] = useState("");
+  const [city, setCity] = useState("");
+  const [remark, setRemark] = useState('');
   const [selectCustomer, setSelectCustomer] = useState("");
   const [requirement, setRequirement] = useState("");
   const [leadSource, setLeadSource] = useState("");
   const [project, setProject] = useState("");
-  const [teamLeader, setTeamLeader] = useState("");
-  const [agent, setAgent] = useState("");
+  const [agentid, setAgentId] = useState([])
+  const [teamLeader, setTeamLeader] = useState([]);
+  const [teamleaderId, setTeamLeaderId] = useState([]);
+  const [agent, setAgent] = useState([]);
+  const [require, setRequire] = useState([])
+  const [statedata, setState] = useState([])
+
 
   const genderData = ["Male", "Female", "Other"];
-  const cityData = ["Noida", "Delhi", "Aligarh"];
+
   const customerTypeData = ["Dealer", "Customer"];
-  const requirementData = ["100 Sq.Yards", "150 Sq.Yards", "200 Sq.Yards", "50 Sq.Yards", "Flat", "Plot"];
+
   const leadSourceData = ["Facebook", "Instagram"];
   const projectData = ["Golden Enclave", "Golden Enclave 23k Square", "Golden Home", "Golden Home 3 Lac"];
   const personData = ["Ram", "Shayam", "Vivek", "Rahul"];
 
+  useEffect(() => {
+    Requirment();
+    teamLeaderfn();
+    state();
+  }, [])
+
+
+
+
+  const state = async () => {
+    try {
+      const resstate = await axios.get("https://api.almonkdigital.in/api/state-list", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      if (resstate.status === 200) {
+        console.log("state", resstate.data.data)
+        setState(resstate.data.data)
+      }
+    }
+    catch (error) {
+      console.log(error)
+    }
+  }
+  const teamLeaderfn = async () => {
+    try {
+      const teamleaderres = await axios.get("https://api.almonkdigital.in/api/admin/get-team-leader", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      })
+
+      if (teamleaderres.status === 200) {
+        console.log(teamleaderres.data.data)
+        setTeamLeader(teamleaderres.data.data)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  };
+  const Requirment = async () => {
+    try {
+      const response = await axios.get('https://api.almonkdigital.in/api/admin/view-master-setting', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      if (response.status === 200) {
+
+        const getData = response.data.data
+        console.log(getData)
+        setRequire(getData.filter(item => item.cat_name === "Require Measurement"))
+      }
+    } catch (error) {
+      toast.error(error);
+    }
+  }
+  const handleFilterChange = async (e) => {
+    const teamleaderId = e.target.value
+    setTeamLeaderId(teamleaderId)
+    console.log("id", teamleaderId)
+    try {
+      const agentRes = await axios.get(`https://api.almonkdigital.in/api/admin/get-agent/${teamleaderId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      if (agentRes.status === 200) {
+        console.log("agent", agentRes.data.data)
+        setAgent(agentRes.data.data)
+      }
+    }
+    catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleAgentId = (e) => {
+    const AgentId = e.target.value
+    console.log("AgentId", AgentId)
+    setAgentId(AgentId)
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !number || !selectedGender || !selectedCity || !selectCustomer) {
-      toast.error("Please fill all the required fields.");
+    if (!name || !number || !selectedGender || !selectedState || !leadSource || !project) {
+      toast.error("Please fill all required fields.");
       return;
     }
 
@@ -35,142 +130,166 @@ const CreateForm = () => {
       contact: number,
       alt_contact: altnumber,
       gender: selectedGender,
-      state: selectedCity,
-      city: selectedCity,
+      state: selectedState,
+      city,
       requirement,
       lead_source: leadSource,
       customer_type: selectCustomer,
-      project: "1",
-      remark: "No Remark",
-      team_leader: teamLeader,
-      agent,
+      project,
+      remark,
+      team_leader: teamleaderId,
+      agent: agentid,
     };
-
+    console.log(formData)
     try {
-      const res = await axios.post("https://api.almonkdigital.in/api/create-customer", formData, {
+      const res = await api.post("https://api.almonkdigital.in/api/create-customer", formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
-      // console.log("Success:", res.data);
       toast.success("Client added successfully!");
-      setName("")
-      setSelectedGender("")
-      setAgent("")
-      setTeamLeader("")
-      setProject("")
-      setLeadSource("")
-      setRequirement("")
-      setSelectCustomer("")
-      setSelectedCity("")
-      setAltnumber("")
-      setNumber("")
+      setName("");
+      setSelectedGender("");
+      setAgent("");
+      setTeamLeader("");
+      setProject("");
+      setLeadSource("");
+      setRequirement("");
+      setSelectCustomer("");
+      setSelectedState("");
+      setCity("");
+      setAltnumber("");
+      setNumber("");
+      setRemark("");
 
     } catch (error) {
-      // console.error("Error posting data:", error);
-      toast.error("Failed to add client. Please try again.");
+      toast.error("Failed to add client. Try again.");
     }
   };
-
+  console.log("check", teamLeader)
+  console.log("vdgfdgf", statedata)
   return (
-    <>
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <h1 style={{ margin: 0 }}>Create New Cleint</h1>
-        <input style={styles.input} type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" />
+    <div className="container">
+      <h2 className="mb-4 text-center textsize">Create New Lead</h2>
+      <form onSubmit={handleSubmit} className="p-4 border rounded shadow bg-white ">
 
-        <select style={styles.select} value={selectedGender} onChange={(e) => setSelectedGender(e.target.value)}>
-          <option value="">Select Gender</option>
-          {genderData.map(g => <option key={g} value={g}>{g}</option>)}
-        </select>
+        <div className="formstart">
+          {/* Personal Details Section */}
+          <div className="border rounded p-3 mb-4">
+            <h5 className="mb-3">Personal Details</h5>
+            <div className="row">
+              <div className="col-md-6 mb-3">
+                <input className="form-control" type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Name *" />
+              </div>
+              <div className="col-md-6 mb-3">
+                <select className="form-select" value={selectedGender} onChange={(e) => setSelectedGender(e.target.value)}>
+                  <option value="">Select Gender *</option>
+                  {genderData.map(g => <option key={g} value={g}>{g}</option>)}
+                </select>
+              </div>
+              <div className="col-md-6 mb-3">
+                <input className="form-control" type="text" value={number} onChange={(e) => setNumber(e.target.value)} placeholder="Mobile No. *" />
+              </div>
+              <div className="col-md-6 mb-3">
+                <input className="form-control" type="text" value={altnumber} onChange={(e) => setAltnumber(e.target.value)} placeholder="Alt Mobile No." />
+              </div>
+            </div>
+          </div>
 
-        <input style={styles.input} type="text" value={number} onChange={(e) => setNumber(e.target.value)} placeholder="Mobile No." />
-        <input style={styles.input} type="text" value={altnumber} onChange={(e) => setAltnumber(e.target.value)} placeholder="Alt Mobile No." />
 
-        <select style={styles.select} value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)}>
-          <option value="">Select City</option>
-          {cityData.map(c => <option key={c} value={c}>{c}</option>)}
-        </select>
 
-        <select style={styles.select} value={selectCustomer} onChange={(e) => setSelectCustomer(e.target.value)}>
-          <option value="">Customer Type</option>
-          {customerTypeData.map(ct => <option key={ct} value={ct}>{ct}</option>)}
-        </select>
+          {/* Lead Details Section */}
+          <div className="border rounded p-3 mb-4">
+            <h5 className="mb-3">Lead Details</h5>
+            <div className="row">
+              <div className="col-md-6 mb-3">
+                <select className="form-select" value={selectCustomer} onChange={(e) => setSelectCustomer(e.target.value)}>
+                  <option value="">Customer Type</option>
+                  {customerTypeData.map(ct => <option key={ct} value={ct}>{ct}</option>)}
+                </select>
+              </div>
+              <div className="col-md-6 mb-3">
+                <select className="form-select" value={requirement} onChange={(e) => setRequirement(e.target.value)}>
+                  <option value="">Requirement</option>
+                  {require.map((r) => (
+                    <option key={r.id} value={r.cat_value}>
+                      {r.cat_value}
+                    </option>))
+                  }
+                </select>
+              </div>
+              <div className="col-md-6 mb-3">
+                <select className="form-select" value={leadSource} onChange={(e) => setLeadSource(e.target.value)}>
+                  <option value="">Lead Source *</option>
+                  {leadSourceData.map(ls => <option key={ls} value={ls}>{ls}</option>)}
+                </select>
+              </div>
+              <div className="col-md-6 mb-3">
+                <select className="form-select" value={project} onChange={(e) => setProject(e.target.value)}>
+                  <option value="">Project *</option>
+                  {projectData.map(p => <option key={p} value={p}>{p}</option>)}
+                </select>
+              </div>
+              <div className="col-12 mb-3">
+                <textarea className="form-control" value={remark} onChange={(e) => setRemark(e.target.value)} placeholder="Remarks..." rows="2" />
+              </div>
+            </div>
+          </div>
+          {/* Address Section */}
+          <div className="border rounded p-3 mb-4">
+            <h5 className="mb-3">Address</h5>
+            <div className="row">
+              <div className="col-md-6 mb-3">
+                <select className="form-select" value={selectedState} onChange={(e) => setSelectedState(e.target.value)}>
+                  <option value="">Select State *</option>
+                  {Array.isArray(statedata) && statedata.map((v, key) => (
+                    <option value={v.state}>{v.state}</option>
+                  ))
+                  }
+                </select>
+              </div>
+              <div className="col-md-6 mb-3">
+                <input className="form-control" type="text" value={city} onChange={(e) => setCity(e.target.value)} placeholder="City" />
+              </div>
+            </div>
+          </div>
+          {/* Assign Lead Section */}
+          <div className="border rounded p-3 mb-4">
+            <h5 className="mb-3">Assign Lead</h5>
+            <div className="row">
+              <div className="col-md-6 mb-3">
+                <select className="form-select" onChange={handleFilterChange} >
+                  <option >Select TeamLeader</option>
+                  {
 
-        <select style={styles.select} value={requirement} onChange={(e) => setRequirement(e.target.value)}>
-          <option value="">Requirement</option>
-          {requirementData.map(r => <option key={r} value={r}>{r}</option>)}
-        </select>
+                    Array.isArray(teamLeader) && teamLeader.map((value, key) =>
+                      <option key={key} value={value.user_id}>{value.name}</option>
+                    )
+                  }
 
-        <select style={styles.select} value={leadSource} onChange={(e) => setLeadSource(e.target.value)}>
-          <option value="">Lead Source</option>
-          {leadSourceData.map(ls => <option key={ls} value={ls}>{ls}</option>)}
-        </select>
 
-        <select style={styles.select} value={project} onChange={(e) => setProject(e.target.value)}>
-          <option value="">Project</option>
-          {projectData.map(p => <option key={p} value={p}>{p}</option>)}
-        </select>
+                </select>
+              </div>
+              <div className="col-md-6 mb-3">
+                <select className="form-select" onChange={handleAgentId} >
+                  <option value="">Select Agent</option>
+                  {
+                    Array.isArray(agent) && agent.map((v, k) =>
+                      <option key={k} value={v.id}>{v.name}</option>
+                    )
+                  }
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <select style={styles.select} value={teamLeader} onChange={(e) => setTeamLeader(e.target.value)}>
-          <option value="">Team Leader</option>
-          {personData.map(p => <option key={p} value={p}>{p}</option>)}
-        </select>
-
-        <select style={styles.select} value={agent} onChange={(e) => setAgent(e.target.value)}>
-          <option value="">Agent</option>
-          {personData.map(p => <option key={p} value={p}>{p}</option>)}
-        </select>
-
-        <button style={styles.button} type="submit">Save</button>
+        <button className="btn btn-primary " type="submit">Save</button>
       </form>
       <ToastContainer />
-    </>
-
+    </div>
   );
-};
-
-const styles = {
-  form: {
-    maxWidth: "600px",
-    margin: "40px auto",
-    padding: "30px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "20px",
-    backgroundColor: "#ffffff",
-    borderRadius: "12px",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-  },
-  input: {
-    padding: "12px 15px",
-    fontSize: "15px",
-    borderRadius: "6px",
-    border: "1px solid #ccc",
-    outline: "none",
-    transition: "border-color 0.3s",
-  },
-  select: {
-    padding: "12px 15px",
-    fontSize: "15px",
-    borderRadius: "6px",
-    border: "1px solid #ccc",
-    outline: "none",
-    backgroundColor: "#fff",
-    transition: "border-color 0.3s",
-  },
-  button: {
-    padding: "14px",
-    backgroundColor: "#004080",
-    color: "#ffffff",
-    border: "none",
-    fontSize: "16px",
-    fontWeight: "600",
-    borderRadius: "6px",
-    cursor: "pointer",
-    transition: "background-color 0.3s",
-  },
 };
 
 export default CreateForm;

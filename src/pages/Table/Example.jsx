@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../../app.css"
 import {
   Table as MuiTable,
   TableBody,
@@ -46,11 +47,11 @@ const Example = ({ data, columns, rowsPerPageOptions = [5, 10, 25] }) => {
   );
 
   return (
-    <TableContainer component={Paper} className="table-container">
-      <MuiTable>
+    <TableContainer component={Paper} className="table-container scroll">
+      <MuiTable >
         {/* Table Header */}
         <TableHead>
-          <TableRow>
+          <TableRow >
             {columns.map((column) => (
               <TableCell
                 sx={{ lineHeight: "initial", fontSize: "11px", padding: "5px 5px" }}
