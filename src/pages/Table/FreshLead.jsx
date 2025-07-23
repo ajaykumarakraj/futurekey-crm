@@ -11,6 +11,9 @@ const FreshLead = () => {
   const [selectedLeads, setSelectedLeads] = useState([]);
   const [teamleader, setTeamLeader] = useState([])
   const [agent, setAgent] = useState([])
+  const [projectList, setProjectList] = useState([])
+  const [projectValue, setProjectValue] = useState("")
+
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
@@ -29,7 +32,27 @@ const FreshLead = () => {
 
   useEffect(() => {
     teamLeader();
+    Requirment()
   }, [])
+
+  const Requirment = async () => {
+    try {
+      const response = await axios.get('https://api.almonkdigital.in/api/admin/view-master-setting', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      if (response.status === 200) {
+
+        const getData = response.data.data
+        console.log(getData)
+
+        setProjectList(getData.filter(item => item.cat_name === "Project"))
+      }
+    } catch (error) {
+      toast.error(error);
+    }
+  }
 
   const teamLeader = async () => {
     try {
@@ -70,6 +93,10 @@ const FreshLead = () => {
     const AgentId = e.target.value
     console.log("AgentId", AgentId)
     setAgentId(AgentId)
+  }
+  const handleProject = async (e) => {
+    setProjectValue(e.target.value)
+
   }
   const handleSearch = async (page = 1) => {
     try {
@@ -129,7 +156,7 @@ const FreshLead = () => {
 
         lead_id: selectedLeads,
         tl_id: teamleaderId,
-        project_id: "56",
+        project_id: projectValue,
         agent_id: agentId,
       };
       console.log(payload)
@@ -258,6 +285,16 @@ const FreshLead = () => {
             {
               agent.map((v, key) =>
                 <option value={v.id} key={key}>{v.name}</option>
+              )
+            }
+
+          </select>
+          <select onChange={handleProject}>
+            <option value="">Select Project</option>
+
+            {
+              projectList.map((v, key) =>
+                <option value={v.cat_value} key={key}>{v.cat_value}</option>
               )
             }
 

@@ -18,7 +18,8 @@ const CreateForm = () => {
   const [selectCustomer, setSelectCustomer] = useState("");
   const [requirement, setRequirement] = useState("");
   const [leadSource, setLeadSource] = useState("");
-  const [project, setProject] = useState("");
+  const [selectproject, setSelectProject] = useState("");
+  const [projectList, setProjectList] = useState([]);
   const [agentid, setAgentId] = useState([])
   const [teamLeader, setTeamLeader] = useState([]);
   const [teamleaderId, setTeamLeaderId] = useState([]);
@@ -31,9 +32,9 @@ const CreateForm = () => {
 
   const customerTypeData = ["Dealer", "Customer"];
 
-  const leadSourceData = ["Facebook", "Instagram"];
-  const projectData = ["Golden Enclave", "Golden Enclave 23k Square", "Golden Home", "Golden Home 3 Lac"];
-  const personData = ["Ram", "Shayam", "Vivek", "Rahul"];
+  const leadSourceData = ["Facebook", "instagram"];
+
+
 
   useEffect(() => {
     Requirment();
@@ -88,6 +89,7 @@ const CreateForm = () => {
         const getData = response.data.data
         console.log(getData)
         setRequire(getData.filter(item => item.cat_name === "Require Measurement"))
+        setProjectList(getData.filter(item => item.cat_name === "Project"))
       }
     } catch (error) {
       toast.error(error);
@@ -120,7 +122,7 @@ const CreateForm = () => {
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !number || !selectedGender || !selectedState || !leadSource || !project) {
+    if (!name || !number || !selectedGender || !selectedState || !leadSource || !selectproject) {
       toast.error("Please fill all required fields.");
       return;
     }
@@ -135,7 +137,7 @@ const CreateForm = () => {
       requirement,
       lead_source: leadSource,
       customer_type: selectCustomer,
-      project,
+      project: selectproject,
       remark,
       team_leader: teamleaderId,
       agent: agentid,
@@ -153,7 +155,7 @@ const CreateForm = () => {
       setSelectedGender("");
       setAgent("");
       setTeamLeader("");
-      setProject("");
+      setSelectProject("");
       setLeadSource("");
       setRequirement("");
       setSelectCustomer("");
@@ -226,9 +228,14 @@ const CreateForm = () => {
                 </select>
               </div>
               <div className="col-md-6 mb-3">
-                <select className="form-select" value={project} onChange={(e) => setProject(e.target.value)}>
+                <select className="form-select" value={selectproject} onChange={(e) => setSelectProject(e.target.value)}>
                   <option value="">Project *</option>
-                  {projectData.map(p => <option key={p} value={p}>{p}</option>)}
+                  {projectList.map((r) => (
+                    <option key={r.id} value={r.cat_value}>
+                      {r.cat_value}
+                    </option>))
+                  }
+
                 </select>
               </div>
               <div className="col-12 mb-3">
@@ -244,7 +251,7 @@ const CreateForm = () => {
                 <select className="form-select" value={selectedState} onChange={(e) => setSelectedState(e.target.value)}>
                   <option value="">Select State *</option>
                   {Array.isArray(statedata) && statedata.map((v, key) => (
-                    <option value={v.state}>{v.state}</option>
+                    <option value={v.state} key={key}>{v.state}</option>
                   ))
                   }
                 </select>

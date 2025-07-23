@@ -11,6 +11,7 @@ const MasterSetting = () => {
     const [value, setValue] = useState("");
     const [measurements, setMeasurements] = useState([]);
     const [leadSources, setLeadSources] = useState([]);
+    const [project, setProject] = useState([]);
     const [archivedReasons, setArchivedReasons] = useState([]);
 
     useEffect(() => {
@@ -31,6 +32,7 @@ const MasterSetting = () => {
                 setMeasurements(allData.filter(item => item.cat_name === "Require Measurement"));
                 setLeadSources(allData.filter(item => item.cat_name === "Lead Source"));
                 setArchivedReasons(allData.filter(item => item.cat_name === "Archived Reason"));
+                setProject(allData.filter(item => item.cat_name === "Project"));
             }
         } catch (error) {
             console.error("Error fetching data", error);
@@ -140,6 +142,7 @@ const MasterSetting = () => {
                         <option value="Require Measurement">Require Measurement</option>
                         <option value="Lead Source">Lead Source</option>
                         <option value="Archived Reason">Archived Reason</option>
+                        <option value="Project">Project</option>
                     </select>
                 </div>
 
@@ -163,6 +166,7 @@ const MasterSetting = () => {
             {renderTable("Require Measurement", measurements)}
             {renderTable("Lead Source", leadSources)}
             {renderTable("Archived Reason", archivedReasons)}
+            {renderTable("Project", project)}
             <ToastContainer />
         </div>
 
