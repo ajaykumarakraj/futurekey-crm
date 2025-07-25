@@ -53,10 +53,10 @@ const Dashboard = () => {
         { title: 'Today Site Visit', key: 'today_site_visit', path: '/lead/TodaySiteVisit' },
         { title: 'Tomorrow Site Visit', key: 'tomorrow_site_visit', path: '/lead/TommorowSiteVisit' },
         { title: 'Create Lead', key: null, path: '/leads/create' },
-        { title: 'Bulk Upload', key: null, path: '/leads/bulk-upload' },
+        // { title: 'Bulk Upload', key: null, path: '/leads/bulk-upload' },
         { title: 'Table View', key: null, path: '/table' },
-        { title: 'Support', key: null, path: '/support' },
-        { title: 'Change Password', key: null, path: '/change-password' },
+        // { title: 'Support', key: null, path: '/support' },
+        // { title: 'Change Password', key: null, path: '/change-password' },
     ];
 
     return (

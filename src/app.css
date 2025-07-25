@@ -25,9 +25,7 @@ input[type="checkbox"] {
     height: initial !important;
 }
 
-.scroll {
-    height: 400px !important;
-}
+
 
 label {
     font-size: 12px;
@@ -36,4 +34,69 @@ label {
 select,
 input {
     font-size: 12px !important;
+}
+
+.notediv {
+    overflow-y: scroll;
+    height: 250px;
+    border: 1px solid #9f9f9f;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    margin-top: 20px;
+    max-height: 500px;
+
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px;
+}
+
+.custom-table th,
+.custom-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.custom-table th {
+    background-color: #f4f4f4;
+    font-weight: 100;
+}
+
+.custom-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.pagination button {
+    padding: 6px 12px;
+    border: none;
+    background-color: #003961;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.pagination select {
+    padding: 4px 8px;
 }

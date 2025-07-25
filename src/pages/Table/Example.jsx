@@ -1,43 +1,29 @@
 import React, { useState } from "react";
-import "../../app.css"
-import {
-  Table as MuiTable,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  TablePagination,
-  TextField,
-} from "@mui/material";
-import "./tableStyles.css"; // Ensure this file contains the appropriate CSS
+import "../../app.css";
+import "./tableStyles.css";
 
 const Example = ({ data, columns, rowsPerPageOptions = [5, 10, 25] }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
-  const [filters, setFilters] = useState({}); // Store filter values for each column
+  const [filters, setFilters] = useState({});
 
-  // Handle page change
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  // Handle rows per page change
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to first page when rows per page changes
-  };
-
-  // Handle filter change
   const handleFilterChange = (field, value) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [field]: value.toLowerCase(),
     }));
+    setPage(0); // Reset to first page on filter
   };
 
-  // Apply filters to the data
+  const handleChangePage = (newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (e) => {
+    setRowsPerPage(parseInt(e.target.value));
+    setPage(0);
+  };
+
   const filteredData = data.filter((row) =>
     columns.every((column) =>
       filters[column.field]
@@ -46,70 +32,54 @@ const Example = ({ data, columns, rowsPerPageOptions = [5, 10, 25] }) => {
     )
   );
 
+  const paginatedData = filteredData.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+
   return (
-    <TableContainer component={Paper} className="table-container scroll">
-      <MuiTable >
-        {/* Table Header */}
-        <TableHead>
-          <TableRow >
+    <div className="table-wrapper">
+      <table className="custom-table">
+        <thead>
+          <tr>
             {columns.map((column) => (
-              <TableCell
-                sx={{ lineHeight: "initial", fontSize: "11px", padding: "5px 5px" }}
-                key={column.field}
-              >
-                <strong>{column.headerName}</strong>
-                {/* Filter Input */}
-                <TextField
-                  size="small"
-                  variant="outlined"
+              <th key={column.field}>
+                <div>{column.headerName}</div>
+                <input
+                  type="text"
                   placeholder={`Filter ${column.headerName}`}
                   onChange={(e) => handleFilterChange(column.field, e.target.value)}
-                  style={{ marginTop: "5px", width: "100%", }}
+                  style={{ width: "100%", marginTop: "5px" }}
                 />
-              </TableCell>
+              </th>
             ))}
-          </TableRow>
-        </TableHead>
-
-        {/* Table Body */}
-        <TableBody>
-          {filteredData.length > 0 ? (
-            filteredData
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // Slice data for current page
-              .map((row, index) => (
-                <TableRow key={index} hover>
-                  {columns.map((column) => (
-                    <TableCell
-                      sx={{ lineHeight: "initial", fontSize: "12px", padding: "5px 5px" }}
-                      key={column.field}
-                    >
-                      {column.renderCell ? column.renderCell(row) : row[column.field]}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+          </tr>
+        </thead>
+        <tbody>
+          {paginatedData.length > 0 ? (
+            paginatedData.map((row, rowIndex) => (
+              <tr key={rowIndex}>
+                {columns.map((column) => (
+                  <td key={column.field}>
+                    {column.renderCell ? column.renderCell(row) : row[column.field]}
+                  </td>
+                ))}
+              </tr>
+            ))
           ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} align="center">
+            <tr>
+              <td colSpan={columns.length} style={{ textAlign: "center" }}>
                 No matching records found
-              </TableCell>
-            </TableRow>
+              </td>
+            </tr>
           )}
-        </TableBody>
-      </MuiTable>
+        </tbody>
+      </table>
 
-      {/* Pagination */}
-      {/* <TablePagination
-        rowsPerPageOptions={rowsPerPageOptions}
-        component="div"
-        count={filteredData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        aria-label="Table Pagination"
-      /> */}
-    </TableContainer>
+
+    </div>
   );
 };
 

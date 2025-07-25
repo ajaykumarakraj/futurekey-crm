@@ -16,15 +16,28 @@ const CreateForm = () => {
   const [city, setCity] = useState("");
   const [remark, setRemark] = useState('');
   const [selectCustomer, setSelectCustomer] = useState("");
+  // requirement  
   const [requirement, setRequirement] = useState("");
+  const [require, setRequire] = useState([])
+
+  // lead source 
+  const [leadSourceList, setLeadSourceList] = useState([])
   const [leadSource, setLeadSource] = useState("");
+
+  // project 
   const [selectproject, setSelectProject] = useState("");
   const [projectList, setProjectList] = useState([]);
-  const [agentid, setAgentId] = useState([])
+
+
+  // team Leader
   const [teamLeader, setTeamLeader] = useState([]);
   const [teamleaderId, setTeamLeaderId] = useState([]);
+
+  // agent
+  const [agentid, setAgentId] = useState([])
   const [agent, setAgent] = useState([]);
-  const [require, setRequire] = useState([])
+
+
   const [statedata, setState] = useState([])
 
 
@@ -32,7 +45,7 @@ const CreateForm = () => {
 
   const customerTypeData = ["Dealer", "Customer"];
 
-  const leadSourceData = ["Facebook", "instagram"];
+
 
 
 
@@ -90,6 +103,7 @@ const CreateForm = () => {
         console.log(getData)
         setRequire(getData.filter(item => item.cat_name === "Require Measurement"))
         setProjectList(getData.filter(item => item.cat_name === "Project"))
+        setLeadSourceList(getData.filter(item => item.cat_name === "Lead Source"))
       }
     } catch (error) {
       toast.error(error);
@@ -224,7 +238,12 @@ const CreateForm = () => {
               <div className="col-md-6 mb-3">
                 <select className="form-select" value={leadSource} onChange={(e) => setLeadSource(e.target.value)}>
                   <option value="">Lead Source *</option>
-                  {leadSourceData.map(ls => <option key={ls} value={ls}>{ls}</option>)}
+
+                  {leadSourceList.map((r) => (
+                    <option key={r.id} value={r.cat_value}>
+                      {r.cat_value}
+                    </option>))
+                  }
                 </select>
               </div>
               <div className="col-md-6 mb-3">

@@ -177,6 +177,8 @@ export default MasterSetting;
 const styles = {
     container: {
         maxWidth: "900px",
+        height: 590,
+        overflowY: "scroll",
         margin: "auto",
         padding: "40px 20px",
         fontFamily: "Segoe UI, sans-serif",
