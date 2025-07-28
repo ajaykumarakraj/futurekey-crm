@@ -29,7 +29,7 @@ const ConvertedLead = () => {
         const mapped = res?.data?.data?.data?.map(item => ({
 
           id: item.id,
-          customerId: item.cust_id,
+          customerId: item.id,
           enterDate: item.created_at?.split("T")[0],
           contactPerson: item.name,
           contactNumber: item.contact,
@@ -69,7 +69,19 @@ const ConvertedLead = () => {
     { field: "id", headerName: "#", align: "center" },
     { field: "customerId", headerName: "Customer ID", align: "center" },
     { field: "enterDate", headerName: "Enter Date", align: "center" },
-    { field: "contactPerson", headerName: "Contact Person", align: "left" },
+    {
+      field: "contactPerson",
+      headerName: "Contact Person",
+      align: "left",
+      renderCell: (row) => (
+        <a
+          href={`/lead-update/${row.customerId}`}
+          style={{ color: "#1976d2", textDecoration: "underline", cursor: "pointer" }}
+        >
+          {row.contactPerson}
+        </a>
+      ),
+    },
     { field: "contactNumber", headerName: "Contact Number", align: "center" },
     { field: "leadSource", headerName: "Lead Source", align: "left" },
     { field: "teamLeader", headerName: "Team Leader", align: "left" },

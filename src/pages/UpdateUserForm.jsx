@@ -82,7 +82,7 @@ function UpdateUserForm() {
             toast.error("Error submitting form");
         }
     };
-    console.log("deviceLogin", deviceLogin)
+    console.log("deviceLogin", id)
     return (
         <div className="container">
             <h2 className="mb-4 text-center textsize">Edit User</h2>

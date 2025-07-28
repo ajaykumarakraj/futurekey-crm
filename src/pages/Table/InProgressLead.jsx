@@ -25,11 +25,11 @@ const InProgressLead = () => {
       });
 
       if (res?.status === 200 && Array.isArray(res?.data?.data?.data)) {
-        // console.log(res.data.data)
-        const mapped = res?.data?.data?.data?.map(item => ({
+        console.log(res.data.data)
+        const mapped = res?.data?.data?.data?.map((item, index) => ({
 
-          id: item.id,
-          customerId: item.cust_id,
+          id: (page - 1) * 50 + index + 1,
+          customerId: item.id,
           enterDate: item.created_at?.split("T")[0],
           contactPerson: item.name,
           contactNumber: item.contact,
@@ -69,7 +69,19 @@ const InProgressLead = () => {
     { field: "id", headerName: "#", align: "center" },
     { field: "customerId", headerName: "Customer ID", align: "center" },
     { field: "enterDate", headerName: "Enter Date", align: "center" },
-    { field: "contactPerson", headerName: "Contact Person", align: "left" },
+    {
+      field: "contactPerson",
+      headerName: "Contact Person",
+      align: "left",
+      renderCell: (row) => (
+        <a
+          href={`/lead-update/${row.customerId}`}
+          style={{ color: "#1976d2", textDecoration: "underline", cursor: "pointer" }}
+        >
+          {row.contactPerson}
+        </a>
+      ),
+    },
     { field: "contactNumber", headerName: "Contact Number", align: "center" },
     { field: "leadSource", headerName: "Lead Source", align: "left" },
     { field: "teamLeader", headerName: "Team Leader", align: "left" },
@@ -81,18 +93,30 @@ const InProgressLead = () => {
     { field: "observation", headerName: "Observation", align: "left" },
   ];
 
-  function getPageNumbers(currentPage, totalPages) {
-    const pageNumbers = [];
+  //  const handlePageChange = (page) => {
+  //   if (page >= 1 && page <= totalPages) {
+  //     fetchLeads(page);
+  //   }
+  // };
 
-    const start = Math.max(1, currentPage - 2);
-    const end = Math.min(totalPages, currentPage + 2);
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = startPage + maxPagesToShow - 1;
 
-    for (let i = start; i <= end; i++) {
-      pageNumbers.push(i);
+    if (endPage > totalPages) {
+      endPage = totalPages;
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
     }
-    return pageNumbers;
-  }
 
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  };
+  console.log(data)
   return (
     <div>
       {/* Filter Section */}
@@ -154,7 +178,7 @@ const InProgressLead = () => {
       </div>
 
       {/* Table Section */}
-      <Example data={data} columns={columns} rowsPerPageOptions={[10]} />
+      <Example data={data} columns={columns} rowsPerPageOptions={[50]} />
 
       {/* Enhanced Pagination Section */}
       <div style={{ marginTop: "20px", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>

@@ -183,11 +183,11 @@ const CreateForm = () => {
       toast.error("Failed to add client. Try again.");
     }
   };
-  console.log("check", teamLeader)
-  console.log("vdgfdgf", statedata)
+  // console.log("check", teamLeader)
+  // console.log("vdgfdgf", statedata)
   return (
     <div className="container">
-      <h2 className="mb-4 text-center textsize">Create New Lead</h2>
+      <h2 className="mb-4 text-center textsize headingstyle">Create New Lead</h2>
       <form onSubmit={handleSubmit} className="p-4 border rounded shadow bg-white ">
 
         <div className="formstart">
@@ -311,7 +311,7 @@ const CreateForm = () => {
           </div>
         </div>
 
-        <button className="btn btn-primary " type="submit">Save</button>
+        <button className="btn" type="submit">Save</button>
       </form>
       <ToastContainer />
     </div>

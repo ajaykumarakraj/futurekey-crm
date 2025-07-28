@@ -247,7 +247,7 @@ const UpdateCreateForm = () => {
         }
     };
     // console.log("check", id)
-    console.log("check", getnote)
+    console.log("check", id)
     return (
         <div className="container">
             <h2 className="mb-4 text-center textsize">Update Lead</h2>
@@ -259,18 +259,23 @@ const UpdateCreateForm = () => {
                         <h5 className="mb-3">Personal Details</h5>
                         <div className="row">
                             <div className="col-md-6 mb-3">
+                                <label>Full Name</label>
                                 <input className="form-control" type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Name *" />
                             </div>
                             <div className="col-md-6 mb-3">
+                                <label>Gender</label>
                                 <select className="form-select" value={selectedGender} onChange={(e) => setSelectedGender(e.target.value)}>
+
                                     <option value="">Select Gender *</option>
                                     {genderData.map(g => <option key={g} value={g}>{g}</option>)}
                                 </select>
                             </div>
                             <div className="col-md-6 mb-3">
+                                <label>Number</label>
                                 <input className="form-control" type="text" value={number} onChange={(e) => setNumber(e.target.value)} placeholder="Mobile No. *" />
                             </div>
                             <div className="col-md-6 mb-3">
+                                <label>Alt Number</label>
                                 <input className="form-control" type="text" value={altnumber} onChange={(e) => setAltnumber(e.target.value)} placeholder="Alt Mobile No." />
                             </div>
                         </div>
@@ -282,6 +287,7 @@ const UpdateCreateForm = () => {
                         <h5 className="mb-3">Address</h5>
                         <div className="row">
                             <div className="col-md-6 mb-3">
+                                <label>Select State</label>
                                 <select className="form-select" value={selectedState} onChange={(e) => setSelectedState(e.target.value)}>
                                     <option value="">Select State *</option>
                                     {Array.isArray(statedata) && statedata.map((v, key) => (
@@ -291,6 +297,7 @@ const UpdateCreateForm = () => {
                                 </select>
                             </div>
                             <div className="col-md-6 mb-3">
+                                <label>City</label>
                                 <input className="form-control" type="text" value={city} onChange={(e) => setCity(e.target.value)} placeholder="City" />
                             </div>
                         </div>
@@ -304,12 +311,14 @@ const UpdateCreateForm = () => {
                         <h5 className="mb-3">Lead Details</h5>
                         <div className="row">
                             <div className="col-md-6 mb-3">
+                                <label>Customer Type</label>
                                 <select className="form-select" value={selectCustomer} onChange={(e) => setSelectCustomer(e.target.value)}>
                                     <option value="">Customer Type</option>
                                     {customerTypeData.map(ct => <option key={ct} value={ct}>{ct}</option>)}
                                 </select>
                             </div>
                             <div className="col-md-6 mb-3">
+                                <label>Requirement</label>
                                 <select className="form-select" value={requirement} onChange={(e) => setRequirement(e.target.value)}>
                                     <option value="">Requirement</option>
                                     {require.map((r) => (
@@ -320,6 +329,7 @@ const UpdateCreateForm = () => {
                                 </select>
                             </div>
                             <div className="col-md-6 mb-3">
+                                <label>Lead Source *</label>
                                 <select className="form-select" value={leadSource} onChange={(e) => setLeadSource(e.target.value)}>
                                     <option value="">Lead Source *</option>
 
@@ -331,6 +341,7 @@ const UpdateCreateForm = () => {
                                 </select>
                             </div>
                             <div className="col-md-6 mb-3">
+                                <label>Project *</label>
                                 <select className="form-select" value={selectproject} onChange={(e) => setSelectProject(e.target.value)}>
                                     <option value="">Project *</option>
                                     {projectList.map((r) => (
@@ -342,6 +353,7 @@ const UpdateCreateForm = () => {
                                 </select>
                             </div>
                             <div className="col-md-6 mb-3">
+                                <label>Select Team Leader</label>
                                 <select className="form-select" onChange={handleFilterChange} >
                                     <option value=''>{getteamleader || "Select Team Leader"}</option>
                                     {
@@ -355,6 +367,7 @@ const UpdateCreateForm = () => {
                                 </select>
                             </div>
                             <div className="col-md-6 mb-3">
+                                <label>Select Agent</label>
                                 <select className="form-select" onChange={handleAgentId} >
                                     {/* <option value="">{}</option> */}
                                     <option value=''>{getAgent || "Select Agent"}</option>
@@ -366,6 +379,7 @@ const UpdateCreateForm = () => {
                                 </select>
                             </div>
                             <div className="col-md-6 mb-3">
+                                <label>Last Call Status</label>
                                 <select className="form-select" value={callStatus} onChange={(e) => setCallStatus(e.target.value)}>
                                     <option value="">Last Call Status</option>
                                     {callStatusData.map(lt => <option key={lt} value={lt}>{lt}</option>)}
@@ -373,6 +387,7 @@ const UpdateCreateForm = () => {
                                 </select>
                             </div>
                             <div className="col-md-6 mb-3">
+                                <label>Last Call Action</label>
                                 <select className="form-select" value={callAction} onChange={(e) => setCallAction(e.target.value)}>
                                     <option value="">Last Call Action</option>
                                     {callActionData.map(ct => <option key={ct} value={ct}>{ct}</option>)}
@@ -380,6 +395,7 @@ const UpdateCreateForm = () => {
                                 </select>
                             </div>
                             <div className="col-md-6 mb-3">
+                                <label>Lead Status</label>
                                 <select className="form-select" value={leadStatus} onChange={(e) => setLeadStatus(e.target.value)}>
                                     <option value="">Lead Status</option>
                                     {leadStatusData.map(ct => <option key={ct} value={ct}>{ct}</option>)}

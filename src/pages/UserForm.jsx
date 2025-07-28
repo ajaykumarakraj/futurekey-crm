@@ -82,7 +82,7 @@ function UserForm() {
 
     return (
         <div className="container">
-            <h2 className="mb-4 text-center textsize">Add User</h2>
+            <h2 className="mb-4 text-center textsize headingstyle">Add User</h2>
             <form onSubmit={handleSubmit} className="p-4 border rounded shadow bg-white">
                 {/* Personal Details Section */}
                 <div className="border rounded p-3 mb-4">
