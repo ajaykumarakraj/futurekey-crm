@@ -38,7 +38,7 @@ input {
 
 .notediv {
     overflow-y: scroll;
-    height: 250px;
+    height: 330px;
     border: 1px solid #9f9f9f;
     padding: 10px;
     border-radius: 5px;
@@ -123,6 +123,7 @@ input {
     transition: transform 0.3s, box-shadow 0.3s;
     text-align: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    justify-content: center;
 }
 
 .card:hover {
@@ -156,4 +157,19 @@ input {
     padding: 10px;
     border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.pstyle {
+
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: #f9f9f9;
+}
+
+.pstyle p {
+    font-size: 10px;
+    margin-top: 0;
+    margin-bottom: 0;
 }

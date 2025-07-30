@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../component/api";
 import Example from "./Example";
+import moment from "moment";
 
 const NewLead = () => {
   const [filters, setFilters] = useState({
@@ -29,34 +30,38 @@ const NewLead = () => {
   const handleSearch = async (page = 1) => {
     try {
       const payload = { lead_status: "1", page };
+      const token = localStorage.getItem("token");
 
       const res = await api.post("/get-lead-data", payload, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       const result = res?.data?.data;
-
-      if (res.status === 200 && Array.isArray(result?.data)) {
-        const mapped = result.data.map((item, index) => ({
+      console.log(result)
+      if (res.status === 200 && Array.isArray(result)) {
+        const mapped = result.map((item, index) => ({
           id: (page - 1) * rowsPerPage + index + 1,
           customerId: item.id,
-          enterDate: item.created_at?.split("T")[0],
+          enterDate: moment(item.created_at).utcOffset("+05:30").format("DD/MM/YYYY, hh:mm A"),
           contactPerson: item.name,
           contactNumber: item.contact,
           leadSource: item.lead_source,
+          city: item.city,
+          Agentassign: moment(item.assign_time).utcOffset("+05:30").format("DD/MM/YYYY, hh:mm A"),
           teamLeader: item.team_leader,
           agent: item.agent,
-          project: item.project,
-          followUp: "N.A.",
+          leadstatus: item.lead_status,
+          project: item.form_name,
+          followUp: item.follow_ups,
           archivedReason: item.archived_reason,
-          lastUpdate: item.updated_at?.split("T")[0],
+          lastUpdate: moment(item.updated_at).utcOffset("+05:30").format("DD/MM/YYYY, hh:mm A"),
           observation: item.remark,
         }));
 
         setData(mapped);
-        setCurrentPage(result.current_page);
-        setTotalPages(result.last_page);
-        setTotalRecords(result.total);
+        setCurrentPage(res.data.meta?.current_page || 1);
+        setTotalPages(res.data.meta?.last_page || 1);
+        setTotalRecords(res.data.meta?.total || 0);
       } else {
         setData([]);
       }
@@ -75,12 +80,19 @@ const NewLead = () => {
     }
   };
 
+  const getPageNumbers = () => {
+    const pages = [];
+    const start = Math.max(1, currentPage - 2);
+    const end = Math.min(totalPages, currentPage + 2);
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
+
   const columns = [
     { field: "id", headerName: "#", align: "center" },
-
-    { field: "customerId", headerName: "Customer ID", align: "center" },
-    { field: "enterDate", headerName: "Enter Date", align: "center" },
-    // { field: "", headerName: "", align: "left" },
+    { field: "enterDate", headerName: "Entry Date", align: "center" },
     {
       field: "contactPerson",
       headerName: "Contact Person",
@@ -94,26 +106,19 @@ const NewLead = () => {
         </a>
       ),
     },
+    { field: "city", headerName: "City" },
     { field: "contactNumber", headerName: "Contact Number", align: "center" },
     { field: "leadSource", headerName: "Lead Source", align: "left" },
+    { field: "Agentassign", headerName: "Agent Assignment", align: "left" },
     { field: "teamLeader", headerName: "Team Leader", align: "left" },
     { field: "agent", headerName: "Agent", align: "left" },
     { field: "project", headerName: "Project", align: "left" },
     { field: "followUp", headerName: "Follow Up", align: "center" },
     { field: "archivedReason", headerName: "Archived Reason", align: "left" },
     { field: "lastUpdate", headerName: "Last Update", align: "center" },
+    { field: "leadstatus", headerName: "Lead Status", align: "center" },
     { field: "observation", headerName: "Observation", align: "left" },
   ];
-
-  const getPageNumbers = () => {
-    const pages = [];
-    const start = Math.max(1, currentPage - 2);
-    const end = Math.min(totalPages, currentPage + 2);
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-    return pages;
-  };
 
   return (
     <div>
@@ -169,7 +174,11 @@ const NewLead = () => {
           <button
             key={page}
             onClick={() => handlePageChange(page)}
-            style={{ backgroundColor: page === currentPage ? "#f00" : "#003961", color: "#fff", padding: "6px 12px" }}
+            style={{
+              backgroundColor: page === currentPage ? "#f00" : "#003961",
+              color: "#fff",
+              padding: "6px 12px",
+            }}
           >
             {page}
           </button>
@@ -178,6 +187,11 @@ const NewLead = () => {
           Next
         </button>
       </div>
+
+      {/* Total Record Info */}
+      {/* <div style={{ textAlign: "center", marginTop: "10px", fontWeight: "bold" }}>
+        Showing page {currentPage} of {totalPages} | Total Records: {totalRecords}
+      </div> */}
     </div>
   );
 };

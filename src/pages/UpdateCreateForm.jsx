@@ -6,73 +6,54 @@ import api from "../component/api";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../app.css"
 import { useParams } from "react-router-dom";
+import { useAuth } from "../component/AuthContext";
 const UpdateCreateForm = () => {
+    const { user, token } = useAuth()
     const { id } = useParams();
     const [name, setName] = useState("");
     const [selectedGender, setSelectedGender] = useState("");
     const [selectCustomer, setSelectCustomer] = useState("");
     // remark note 
-    const [getnote, setGetNote] = useState([])
+    const [getnote, setGetNote] = useState([]);
     const [remark, setRemark] = useState('');
-
-    const [notes, setNotes] = useState("")
-
+    const [notes, setNotes] = useState("");
     // number 
     const [number, setNumber] = useState("");
     const [altnumber, setAltnumber] = useState("");
-
-
     // requirement  
     const [requirement, setRequirement] = useState("");
-    const [require, setRequire] = useState([])
-
+    const [require, setRequire] = useState([]);
     // lead source 
     const [leadSourceList, setLeadSourceList] = useState([])
     const [leadSource, setLeadSource] = useState("");
-
     // project 
     const [selectproject, setSelectProject] = useState("");
     const [projectList, setProjectList] = useState([]);
-
-
     // team Leader
-    const [getteamleader, setGetTeamLeader] = useState("")
+    const [getteamleader, setGetTeamLeader] = useState("");
     const [teamLeader, setTeamLeader] = useState([]);
     const [teamleaderId, setTeamLeaderId] = useState('');
-
     // agent
-    const [getAgent, setGetAgent] = useState("")
-    const [agentid, setAgentId] = useState([])
+    const [getAgent, setGetAgent] = useState("");
+    const [agentid, setAgentId] = useState([]);
     const [agent, setAgent] = useState([]);
 
     // state
     const [statedata, setState] = useState([])
     const [selectedState, setSelectedState] = useState("");
     const [city, setCity] = useState("");
-
-
-    const [callStatus, setCallStatus] = useState("")
-    const [callAction, setCallAction] = useState("")
-
-    const [leadStatus, setLeadStatus] = useState("")
-
+    const [callStatus, setCallStatus] = useState("");
+    const [callAction, setCallAction] = useState("");
+    const [leadStatus, setLeadStatus] = useState("");
     const [scheduleSiteDate, setScheduleSiteDate] = useState("");
-    const [houseVisitDate, setHouseVisitDate] = useState("")
-    const [officeVisitDate, setOfficeVisitDate] = useState("")
-    const [midWayDate, setMidWayDate] = useState("")
-
+    const [houseVisitDate, setHouseVisitDate] = useState("");
+    const [officeVisitDate, setOfficeVisitDate] = useState("");
+    const [midWayDate, setMidWayDate] = useState("");
     const genderData = ["Male", "Female", "Other"];
-
     const customerTypeData = ["Dealer", "Customer"];
+    const callStatusData = ["Connect", "Not Connect"];
+    const callActionData = ["Morning", "After Noon", "Evening"];
 
-    const callStatusData = ["Connect", "Not Connect"]
-    const callActionData = ["Morning", "After Noon", "Evening"]
-    const leadStatusData = [
-        "New",
-        "In Progress",
-        "Archived",
-        "Converted",
-    ]
 
     useEffect(() => {
         Requirment();
@@ -96,7 +77,6 @@ const UpdateCreateForm = () => {
             console.log(error)
         }
     }
-
     const Requirment = async () => {
         try {
             const response = await axios.get('https://api.almonkdigital.in/api/admin/view-master-setting', {
@@ -132,7 +112,6 @@ const UpdateCreateForm = () => {
             console.log(error)
         }
     };
-
     const handleFilterChange = async (e) => {
         const teamleaderId = e.target.value
         setTeamLeaderId(teamleaderId)
@@ -169,7 +148,7 @@ const UpdateCreateForm = () => {
                 }
             })
             if (res.status === 200) {
-                console.log("fetchdata", res.data)
+                console.log("fetchdata", res.data.notes)
                 const fetchdata = res.data.data
 
                 setName(fetchdata.name)
@@ -190,9 +169,6 @@ const UpdateCreateForm = () => {
             console.log(error)
         }
     }
-
-
-
     // submit update api 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -202,6 +178,7 @@ const UpdateCreateForm = () => {
         }
 
         const formData = {
+            user_id: user.user_id,
             id: id,
             name,
             contact: number,
@@ -225,9 +202,6 @@ const UpdateCreateForm = () => {
 
             last_call_action: callAction,
             lead_status: leadStatus,
-
-
-
         };
         console.log("post for update", formData)
         try {
@@ -238,16 +212,14 @@ const UpdateCreateForm = () => {
             });
             if (res.status === 200) {
                 toast.success("Client Update successfully!");
+                setNotes("")
             }
-
-
-
         } catch (error) {
             toast.error("Failed to add client. Try again.");
         }
     };
-    // console.log("check", id)
-    console.log("check", id)
+    console.log("check", user.user_id)
+    console.log("check", getnote)
     return (
         <div className="container">
             <h2 className="mb-4 text-center textsize">Update Lead</h2>
@@ -265,7 +237,6 @@ const UpdateCreateForm = () => {
                             <div className="col-md-6 mb-3">
                                 <label>Gender</label>
                                 <select className="form-select" value={selectedGender} onChange={(e) => setSelectedGender(e.target.value)}>
-
                                     <option value="">Select Gender *</option>
                                     {genderData.map(g => <option key={g} value={g}>{g}</option>)}
                                 </select>
@@ -279,9 +250,7 @@ const UpdateCreateForm = () => {
                                 <input className="form-control" type="text" value={altnumber} onChange={(e) => setAltnumber(e.target.value)} placeholder="Alt Mobile No." />
                             </div>
                         </div>
-
                     </div>
-
                     {/* Assign Lead Section */}
                     <div className="border rounded p-3 mb-4">
                         <h5 className="mb-3">Address</h5>
@@ -398,7 +367,11 @@ const UpdateCreateForm = () => {
                                 <label>Lead Status</label>
                                 <select className="form-select" value={leadStatus} onChange={(e) => setLeadStatus(e.target.value)}>
                                     <option value="">Lead Status</option>
-                                    {leadStatusData.map(ct => <option key={ct} value={ct}>{ct}</option>)}
+                                    <option value="1">New Lead</option>
+                                    <option value="2">In Progress</option>
+                                    <option value="3">Hot Lead</option>
+                                    <option value="4">Archived</option>
+                                    <option value="5">Converted</option>
 
                                 </select>
                             </div>
@@ -417,7 +390,7 @@ const UpdateCreateForm = () => {
                                     backgroundColor: "#f9f9f9",
                                     color: "#333",
                                     cursor: "pointer",
-                                }} value={scheduleSiteDate} onChange={(e) => setScheduleSiteDate(e.target.value)} />
+                                }} min={new Date().toISOString().split("T")[0]} value={scheduleSiteDate} onChange={(e) => setScheduleSiteDate(e.target.value)} />
 
                             </div>
                             <div className="col-md-3 mb-3">
@@ -430,7 +403,7 @@ const UpdateCreateForm = () => {
                                     backgroundColor: "#f9f9f9",
                                     color: "#333",
                                     cursor: "pointer",
-                                }} value={houseVisitDate} onChange={(e) => setHouseVisitDate(e.target.value)} />
+                                }} min={new Date().toISOString().split("T")[0]} value={houseVisitDate} onChange={(e) => setHouseVisitDate(e.target.value)} />
                             </div>
                             <div className="col-md-4 mb-3">
                                 <label style={{ display: "block" }}>Office Visit Completed</label>
@@ -442,7 +415,7 @@ const UpdateCreateForm = () => {
                                     backgroundColor: "#f9f9f9",
                                     color: "#333",
                                     cursor: "pointer",
-                                }} value={officeVisitDate} onChange={(e) => setOfficeVisitDate(e.target.value)} />
+                                }} min={new Date().toISOString().split("T")[0]} value={officeVisitDate} onChange={(e) => setOfficeVisitDate(e.target.value)} />
 
                             </div>
                             <div className="col-md-5 mb-3">
@@ -455,7 +428,10 @@ const UpdateCreateForm = () => {
                                     backgroundColor: "#f9f9f9",
                                     color: "#333",
                                     cursor: "pointer",
-                                }} value={midWayDate} onChange={(e) => setMidWayDate(e.target.value)} />
+                                }}
+                                    min={new Date().toISOString().split("T")[0]}
+                                    value={midWayDate}
+                                    onChange={(e) => setMidWayDate(e.target.value)} />
                             </div>
                         </div>
                     </div>
@@ -465,9 +441,22 @@ const UpdateCreateForm = () => {
 
                             <div className="col-12 mb-3">
                                 <div className="notediv">
-                                    {getnote.remark}
+                                    {getnote.map((v, k) => (
+                                        <div key={k} className="pstyle">
+                                            <p>{v.notes || ""}</p>
+                                            <p> {v.lead_status || ""}</p>
+                                            <p> {v.call_status || ""}</p>
+                                            <p> {v.last_call_action || ""}</p>
+                                            <p> {v.office_visit || ""}</p>
+                                            <p> {v.house_visit || ""}</p>
+                                            <p> {v.midmid_way_visit || ""}</p>
+                                            <p> {v.site_visit || ""}</p>
+                                            <p> {v.by || ""}</p>
+                                        </div>
+                                    ))}
+
                                 </div>
-                                <textarea className="form-control" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Type Here..." rows="2" />
+                                <textarea className="form-control" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Type Here..." rows="3" />
                             </div>
                         </div>
                     </div>

@@ -1,55 +1,68 @@
 import React, { useState, useEffect } from "react";
 import Example from "./Example";
 import api from "../../component/api";
+import moment from "moment";
 import { useAuth } from "../../component/AuthContext";
-const InProgressLead = () => {
-  const [filters, setFilters] = useState({ teamLeader: "", agent: "", leadSource: "", project: "", customer: "", dateFrom: "", dateTo: "", sortBy: "newest" });
-  const [data, setData] = useState([]);
 
+const InProgressLead = () => {
+  const [filters, setFilters] = useState({
+    teamLeader: "",
+    agent: "",
+    leadSource: "",
+    project: "",
+    customer: "",
+    dateFrom: "",
+    dateTo: "",
+    sortBy: "newest",
+  });
+  const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
 
+  const rowsPerPage = 50;
+
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }))
+    setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSearch = async (page = 1) => {
     try {
-      const payload = { lead_status: "2", page };
-      // You can add additional filters here:
-      // teamLeader: filters.teamLeader, etc.
-      const res = await api.post('/get-lead-data', payload, {
+      const payload = {
+        lead_status: "2",
+        page,
+        ...filters,
+      };
+      const res = await api.post("/get-lead-data", payload, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
-      if (res?.status === 200 && Array.isArray(res?.data?.data?.data)) {
-        console.log(res.data.data)
-        const mapped = res?.data?.data?.data?.map((item, index) => ({
-
-          id: (page - 1) * 50 + index + 1,
+      if (res?.status === 200 && Array.isArray(res?.data?.data)) {
+        const mapped = res.data.data.map((item, index) => ({
+          id: (page - 1) * rowsPerPage + index + 1,
           customerId: item.id,
-          enterDate: item.created_at?.split("T")[0],
+          enterDate: moment(item.created_at).utcOffset("+05:30").format("DD/MM/YYYY, hh:mm A"),
           contactPerson: item.name,
           contactNumber: item.contact,
           leadSource: item.lead_source,
+          city: item.city,
+          Agentassign: moment(item.assign_time).utcOffset("+05:30").format("DD/MM/YYYY, hh:mm A"),
           teamLeader: item.team_leader,
           agent: item.agent,
-          project: item.project,
-          followUp: "N.A.", // fallback
+          leadstatus: item.lead_status,
+          project: item.form_name,
+          followUp: item.follow_ups,
           archivedReason: item.archived_reason,
-          lastUpdate: item.updated_at?.split("T")[0],
+          lastUpdate: moment(item.updated_at).utcOffset("+05:30").format("DD/MM/YYYY, hh:mm A"),
           observation: item.remark,
-        }))
+        }));
         setData(mapped);
-        setCurrentPage(res?.data?.data?.current_page);
-        setTotalPages(res?.data?.data?.last_page);
-        setTotalRecords(res?.data?.data?.total);
+        setCurrentPage(res.data.meta.current_page);
+        setTotalPages(res.data.meta.last_page);
+        setTotalRecords(res.data.meta.total);
       } else {
-        console.error('API did not return an array');
         setData([]);
-
       }
     } catch (error) {
       console.error("Fetching Error", error);
@@ -61,43 +74,12 @@ const InProgressLead = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handlePageChange = (newPage) => {
-    handleSearch(newPage);
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      handleSearch(page);
+    }
   };
-
-  const columns = [
-    { field: "id", headerName: "#", align: "center" },
-    { field: "customerId", headerName: "Customer ID", align: "center" },
-    { field: "enterDate", headerName: "Enter Date", align: "center" },
-    {
-      field: "contactPerson",
-      headerName: "Contact Person",
-      align: "left",
-      renderCell: (row) => (
-        <a
-          href={`/lead-update/${row.customerId}`}
-          style={{ color: "#1976d2", textDecoration: "underline", cursor: "pointer" }}
-        >
-          {row.contactPerson}
-        </a>
-      ),
-    },
-    { field: "contactNumber", headerName: "Contact Number", align: "center" },
-    { field: "leadSource", headerName: "Lead Source", align: "left" },
-    { field: "teamLeader", headerName: "Team Leader", align: "left" },
-    { field: "agent", headerName: "Agent", align: "left" },
-    { field: "project", headerName: "Project", align: "left" },
-    { field: "followUp", headerName: "Follow Up", align: "center" },
-    { field: "archivedReason", headerName: "Archived Reason", align: "left" },
-    { field: "lastUpdate", headerName: "Last Update", align: "center" },
-    { field: "observation", headerName: "Observation", align: "left" },
-  ];
-
-  //  const handlePageChange = (page) => {
-  //   if (page >= 1 && page <= totalPages) {
-  //     fetchLeads(page);
-  //   }
-  // };
 
   const getPageNumbers = () => {
     const pages = [];
@@ -113,13 +95,41 @@ const InProgressLead = () => {
     for (let i = startPage; i <= endPage; i++) {
       pages.push(i);
     }
-
     return pages;
   };
-  console.log(data)
+
+  const columns = [
+    { field: "id", headerName: "#", align: "center" },
+    { field: "enterDate", headerName: "Entry Date", align: "center" },
+    {
+      field: "contactPerson",
+      headerName: "Contact Person",
+      align: "left",
+      renderCell: (row) => (
+        <a
+          href={`/lead-update/${row.customerId}`}
+          style={{ color: "#1976d2", textDecoration: "underline", cursor: "pointer" }}
+        >
+          {row.contactPerson}
+        </a>
+      ),
+    },
+    { field: "city", headerName: "City" },
+    { field: "contactNumber", headerName: "Contact Number", align: "center" },
+    { field: "leadSource", headerName: "Lead Source", align: "left" },
+    { field: "Agentassign", headerName: "Agent Assignment", align: "left" },
+    { field: "teamLeader", headerName: "Team Leader", align: "left" },
+    { field: "agent", headerName: "Agent", align: "left" },
+    { field: "project", headerName: "Project", align: "left" },
+    { field: "followUp", headerName: "Follow Up", align: "center" },
+    { field: "archivedReason", headerName: "Archived Reason", align: "left" },
+    { field: "lastUpdate", headerName: "Last Update", align: "center" },
+    { field: "leadstatus", headerName: "Lead Status", align: "center" },
+    { field: "observation", headerName: "Observation", align: "left" },
+  ];
+
   return (
     <div>
-      {/* Filter Section */}
       <div style={{ marginBottom: "20px", background: "#c1c1c1", padding: "20px", borderRadius: "5px", boxShadow: "rgb(0 0 0 / 56%) 0px 3px 8px" }}>
         <form style={{ display: "flex", flexWrap: "wrap", gap: "10px", alignItems: "center" }}>
           <select name="teamLeader" onChange={handleFilterChange} value={filters.teamLeader}>
@@ -146,27 +156,9 @@ const InProgressLead = () => {
             <option value="Project 2">Project 2</option>
           </select>
 
-          <input
-            type="text"
-            name="customer"
-            placeholder="Customer ID"
-            onChange={handleFilterChange}
-            value={filters.customer}
-          />
-
-          <input
-            type="date"
-            name="dateFrom"
-            onChange={handleFilterChange}
-            value={filters.dateFrom}
-          />
-
-          <input
-            type="date"
-            name="dateTo"
-            onChange={handleFilterChange}
-            value={filters.dateTo}
-          />
+          <input type="text" name="customer" placeholder="Customer ID" onChange={handleFilterChange} value={filters.customer} />
+          <input type="date" name="dateFrom" onChange={handleFilterChange} value={filters.dateFrom} />
+          <input type="date" name="dateTo" onChange={handleFilterChange} value={filters.dateTo} />
 
           <select name="sortBy" onChange={handleFilterChange} value={filters.sortBy}>
             <option value="newest">Newest First</option>
@@ -177,42 +169,31 @@ const InProgressLead = () => {
         </form>
       </div>
 
-      {/* Table Section */}
       <Example data={data} columns={columns} rowsPerPageOptions={[50]} />
 
-      {/* Enhanced Pagination Section */}
-      <div style={{ marginTop: "20px", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>
-        {/* Prev Button */}
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage <= 1}
-          style={{ padding: "8px 16px", backgroundColor: currentPage <= 1 ? "#e0e0e0" : "#003961", color: currentPage <= 1 ? "#888" : "#ffffff", border: "none", borderRadius: "6px", cursor: currentPage <= 1 ? "not-allowed" : "pointer" }}
-        >
+      <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginTop: "20px" }}>
+        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage <= 1}>
           Prev
         </button>
-
-        {/* Numbered Pages */}
-        {getPageNumbers(currentPage, totalPages).map((page) => (
+        {getPageNumbers().map((page) => (
           <button
             key={page}
             onClick={() => handlePageChange(page)}
-            style={{ padding: "6px 12px", backgroundColor: page === currentPage ? "#ff0000" : "#003961", color: "#ffffff", border: "none", borderRadius: "6px" }}
+            style={{
+              backgroundColor: page === currentPage ? "#f00" : "#003961",
+              color: "#fff",
+              padding: "6px 12px",
+            }}
           >
             {page}
           </button>
         ))}
-
-        {/* Next Button */}
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage >= totalPages}
-          style={{ padding: "8px 16px", backgroundColor: currentPage >= totalPages ? "#e0e0e0" : "#003961", color: currentPage >= totalPages ? "#888" : "#ffffff", border: "none", borderRadius: "6px", cursor: currentPage >= totalPages ? "not-allowed" : "pointer" }}
-        >
+        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= totalPages}>
           Next
         </button>
       </div>
     </div>
-  )
+  );
 };
 
 export default InProgressLead;
