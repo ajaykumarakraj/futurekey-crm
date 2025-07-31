@@ -130,6 +130,7 @@ const InProgressLead = () => {
 
   return (
     <div>
+      <h2 className="mb-2 text-center textsize headingstyle">In Progress Leads</h2>
       <div style={{ marginBottom: "20px", background: "#c1c1c1", padding: "20px", borderRadius: "5px", boxShadow: "rgb(0 0 0 / 56%) 0px 3px 8px" }}>
         <form style={{ display: "flex", flexWrap: "wrap", gap: "10px", alignItems: "center" }}>
           <select name="teamLeader" onChange={handleFilterChange} value={filters.teamLeader}>

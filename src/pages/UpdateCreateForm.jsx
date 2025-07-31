@@ -7,12 +7,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "../app.css"
 import { useParams } from "react-router-dom";
 import { useAuth } from "../component/AuthContext";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 const UpdateCreateForm = () => {
+
     const { user, token } = useAuth()
     const { id } = useParams();
     const [name, setName] = useState("");
     const [selectedGender, setSelectedGender] = useState("");
     const [selectCustomer, setSelectCustomer] = useState("");
+    const [selectedDate, setSelectedDate] = useState(null);
     // remark note 
     const [getnote, setGetNote] = useState([]);
     const [remark, setRemark] = useState('');
@@ -42,8 +46,13 @@ const UpdateCreateForm = () => {
     const [statedata, setState] = useState([])
     const [selectedState, setSelectedState] = useState("");
     const [city, setCity] = useState("");
+    // call action 
     const [callStatus, setCallStatus] = useState("");
     const [callAction, setCallAction] = useState("");
+
+    // const [followUpDate, setFollowUpDate] = useState('');
+
+    const [error, setError] = useState('');
     const [leadStatus, setLeadStatus] = useState("");
     const [scheduleSiteDate, setScheduleSiteDate] = useState("");
     const [houseVisitDate, setHouseVisitDate] = useState("");
@@ -51,9 +60,35 @@ const UpdateCreateForm = () => {
     const [midWayDate, setMidWayDate] = useState("");
     const genderData = ["Male", "Female", "Other"];
     const customerTypeData = ["Dealer", "Customer"];
-    const callStatusData = ["Connect", "Not Connect"];
-    const callActionData = ["Morning", "After Noon", "Evening"];
 
+    const today = new Date();
+    const connectedOptions = [
+        'on calls',
+        'WhatsApp',
+        'Not Interested',
+        'Fake Query',
+        'Hung Up',
+        'Wrong Number',
+    ];
+
+    const notConnectedOptions = [
+        'Not Pick Up',
+        'Not Reachable',
+        'Number Busy',
+        'Number Blocked',
+        'Incoming Unavailable',
+        'Other',
+    ];
+    const getActionOptions = () => {
+        if (callStatus === 'Connect') return connectedOptions;
+        if (callStatus === 'Not Connect') return notConnectedOptions;
+        return [];
+    };
+    const handleCallStatusChange = (e) => {
+        setCallStatus(e.target.value);
+        setCallAction('');
+        // setFollowUpDate('');
+    }
 
     useEffect(() => {
         Requirment();
@@ -131,13 +166,11 @@ const UpdateCreateForm = () => {
             console.log(error)
         }
     }
-
     const handleAgentId = (e) => {
         const AgentId = e.target.value
         console.log("AgentId", AgentId)
         setAgentId(AgentId)
     }
-
     // get data api
     const GetDataFn = async () => {
 
@@ -148,7 +181,7 @@ const UpdateCreateForm = () => {
                 }
             })
             if (res.status === 200) {
-                console.log("fetchdata", res.data.notes)
+                console.log("fetchdata", res.data)
                 const fetchdata = res.data.data
 
                 setName(fetchdata.name)
@@ -164,6 +197,7 @@ const UpdateCreateForm = () => {
                 setGetTeamLeader(res.data.tl_name)
                 setGetAgent(res.data.agent_name)
                 setGetNote(res.data.notes)
+
             }
         } catch (error) {
             console.log(error)
@@ -176,7 +210,11 @@ const UpdateCreateForm = () => {
             toast.error("Please fill all required fields.");
             return;
         }
-
+        // Validation: if not Archived and followUpDate is empty
+        if (leadStatus !== '4') {
+            setError('Follow-Up Date is required unless the lead is Archived.');
+            return;
+        }
         const formData = {
             user_id: user.user_id,
             id: id,
@@ -199,7 +237,7 @@ const UpdateCreateForm = () => {
             office_visit: officeVisitDate,
             mid_way_visit: midWayDate,
             call_status: callStatus,
-
+            follow_up: selectedDate,
             last_call_action: callAction,
             lead_status: leadStatus,
         };
@@ -218,8 +256,9 @@ const UpdateCreateForm = () => {
             toast.error("Failed to add client. Try again.");
         }
     };
-    console.log("check", user.user_id)
-    console.log("check", getnote)
+
+    console.log("check", selectedDate)
+    // console.log("check", getnote)
     return (
         <div className="container">
             <h2 className="mb-4 text-center textsize">Update Lead</h2>
@@ -349,38 +388,57 @@ const UpdateCreateForm = () => {
                             </div>
                             <div className="col-md-6 mb-3">
                                 <label>Last Call Status</label>
-                                <select className="form-select" value={callStatus} onChange={(e) => setCallStatus(e.target.value)}>
+                                <select className="form-select" value={callStatus} onChange={handleCallStatusChange}>
                                     <option value="">Last Call Status</option>
-                                    {callStatusData.map(lt => <option key={lt} value={lt}>{lt}</option>)}
-
+                                    <option value="Connect">Connect</option>
+                                    <option value="Not Connect">Not Connect</option>
                                 </select>
                             </div>
                             <div className="col-md-6 mb-3">
                                 <label>Last Call Action</label>
-                                <select className="form-select" value={callAction} onChange={(e) => setCallAction(e.target.value)}>
-                                    <option value="">Last Call Action</option>
-                                    {callActionData.map(ct => <option key={ct} value={ct}>{ct}</option>)}
 
+                                <select
+                                    className="form-select"
+                                    value={callAction}
+                                    onChange={(e) => setCallAction(e.target.value)}
+                                    disabled={!callStatus}
+                                >
+                                    <option value="">Select Call Action</option>
+                                    {getActionOptions().map((action, index) => (
+                                        <option key={index} value={action}>
+                                            {action}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
+
+                            {callStatus &&
+                                (<div className="col-md-6 mb-3">
+                                    <label>Follow Up</label>
+                                    <div >
+                                        {/* <label >Follo Up</label> */}
+                                        <DatePicker
+                                            selected={selectedDate}
+                                            onChange={(date) => setSelectedDate(date)}
+                                            showTimeSelect
+                                            timeFormat="hh:mm aa"// ✅ 12-hour format
+                                            timeIntervals={30}
+                                            dateFormat="d/MM/yyyy h:mm aa" // ✅ Display format
+                                            placeholderText="Click to select date & time"
+                                            className="form-control"
+                                            minDate={today}
+                                        />
+
+                                    </div>
+                                </div>)}
+
+                            {error && (
+                                <div className="text-danger mb-2">
+                                    {error}
+                                </div>
+                            )}
+
                             <div className="col-md-6 mb-3">
-                                <label>Lead Status</label>
-                                <select className="form-select" value={leadStatus} onChange={(e) => setLeadStatus(e.target.value)}>
-                                    <option value="">Lead Status</option>
-                                    <option value="1">New Lead</option>
-                                    <option value="2">In Progress</option>
-                                    <option value="3">Hot Lead</option>
-                                    <option value="4">Archived</option>
-                                    <option value="5">Converted</option>
-
-                                </select>
-                            </div>
-
-
-
-
-
-                            <div className="col-md-3 mb-3">
                                 <label style={{ display: "block" }}>Schedule Site Visit</label>
                                 <input type="date" style={{
                                     padding: "8px 12px",
@@ -393,19 +451,8 @@ const UpdateCreateForm = () => {
                                 }} min={new Date().toISOString().split("T")[0]} value={scheduleSiteDate} onChange={(e) => setScheduleSiteDate(e.target.value)} />
 
                             </div>
-                            <div className="col-md-3 mb-3">
-                                <label style={{ display: "block" }}>House Visit Complete</label>
-                                <input type="date" style={{
-                                    padding: "8px 12px",
-                                    border: "1px solid #ccc",
-                                    borderRadius: "6px",
-                                    fontSize: "14px",
-                                    backgroundColor: "#f9f9f9",
-                                    color: "#333",
-                                    cursor: "pointer",
-                                }} min={new Date().toISOString().split("T")[0]} value={houseVisitDate} onChange={(e) => setHouseVisitDate(e.target.value)} />
-                            </div>
-                            <div className="col-md-4 mb-3">
+
+                            <div className="col-md-6 mb-3">
                                 <label style={{ display: "block" }}>Office Visit Completed</label>
                                 <input type="date" style={{
                                     padding: "8px 12px",
@@ -418,7 +465,7 @@ const UpdateCreateForm = () => {
                                 }} min={new Date().toISOString().split("T")[0]} value={officeVisitDate} onChange={(e) => setOfficeVisitDate(e.target.value)} />
 
                             </div>
-                            <div className="col-md-5 mb-3">
+                            <div className="col-md-6 mb-3">
                                 <label style={{ display: "block" }}>Mid Way Visit completed</label>
                                 <input type="date" style={{
                                     padding: "8px 12px",
@@ -432,6 +479,31 @@ const UpdateCreateForm = () => {
                                     min={new Date().toISOString().split("T")[0]}
                                     value={midWayDate}
                                     onChange={(e) => setMidWayDate(e.target.value)} />
+                            </div>
+                            <div className="col-md-6 mb-3">
+                                <label style={{ display: "block" }}>House Visit Complete</label>
+                                <input type="date" style={{
+                                    padding: "8px 12px",
+                                    border: "1px solid #ccc",
+                                    borderRadius: "6px",
+                                    fontSize: "14px",
+                                    backgroundColor: "#f9f9f9",
+                                    color: "#333",
+                                    cursor: "pointer",
+                                }} min={new Date().toISOString().split("T")[0]} value={houseVisitDate} onChange={(e) => setHouseVisitDate(e.target.value)} />
+                            </div>
+
+                            <div className="col-md-7 mb-3">
+                                <label>Lead Status</label>
+                                <select className="form-select" value={leadStatus} onChange={(e) => setLeadStatus(e.target.value)}>
+
+                                    <option value="1">New Lead</option>
+                                    <option value="2">In Progress</option>
+                                    <option value="3">Hot Lead</option>
+                                    <option value="4">Archived</option>
+                                    <option value="5">Converted</option>
+
+                                </select>
                             </div>
                         </div>
                     </div>

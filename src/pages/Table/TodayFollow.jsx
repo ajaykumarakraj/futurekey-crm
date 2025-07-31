@@ -95,6 +95,7 @@ const TodayFollow = () => {
 
   return (
     <div>
+      <h2 className="mb-2 text-center textsize headingstyle">Today Follow Leads</h2>
       {/* Filter Section */}
       <div style={{ marginBottom: "20px", background: "#c1c1c1", padding: "20px", borderRadius: "5px", boxShadow: "rgb(0 0 0 / 56%) 0px 3px 8px" }}>
         <form style={{ display: "flex", flexWrap: "wrap", gap: "10px", alignItems: "center" }}>

@@ -1,14 +1,8 @@
-import React, { useState } from 'react';
-import {
-    Button,
-    TextField,
-    Typography,
-    Container,
-} from '@mui/material';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import api from '../component/api';
-import { useAuth } from '../component/AuthContext'; // ✅ import context
 import axios from 'axios';
+import { useAuth } from '../component/AuthContext'; // ✅ import context
+import '../app.css'; // 👈 custom CSS
 
 const VerifyOtpPage = () => {
     const [otp, setOtp] = useState('');
@@ -16,75 +10,63 @@ const VerifyOtpPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const mobile = location.state?.mobile;
-
     const { login } = useAuth(); // ✅ use auth context
 
-    if (!mobile) {
-        navigate('/');
-        return null;
-    }
+    useEffect(() => {
+        if (!mobile) {
+            navigate('/');
+        }
+    }, [mobile, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('https://api.almonkdigital.in/api/verify-login-otp', { mobile, otp });
+            const res = await axios.post('https://api.almonkdigital.in/api/verify-login-otp', {
+                mobile,
+                otp,
+            });
 
             if (res.data.status === 200) {
                 const token = res.data.token;
                 const user = res.data.data;
 
-                // ✅ update AuthContext
                 login({ user, token });
 
-                // Optional: Save to localStorage too for persistence
                 localStorage.setItem('authToken', token);
                 localStorage.setItem('userData', JSON.stringify(user));
 
-                navigate('/dashboard'); // ✅ redirect
+                navigate('/dashboard');
             } else {
                 setError(res.data.message || 'Invalid OTP');
             }
         } catch (error) {
-            // console.error('Verification error:', error);
-            setError('Error verifying OTP');
+            setError('Error verifying OTP. Please try again.');
         }
     };
 
     return (
-        <Container maxWidth="xs">
-            <Typography variant="h5" align="center" sx={{ mt: 4 }}>
-                Verify OTP
-            </Typography>
-            <Typography variant="body2" align="center" sx={{ mb: 2 }}>
-                OTP sent to: <strong>{mobile}</strong>
-            </Typography>
+        <div className="verify-container">
+            <div className="verify-box">
+                <h2>Verify OTP</h2>
+                <p className="mobile-info">OTP sent to: <strong>{mobile}</strong></p>
 
-            <form onSubmit={handleSubmit}>
-                <TextField
-                    fullWidth
-                    label="OTP"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    margin="normal"
-                    required
-                />
+                <form onSubmit={handleSubmit}>
+                    <label htmlFor="otp">Enter OTP</label>
+                    <input
+                        type="text"
+                        id="otp"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        maxLength="6"
+                        required
+                    />
 
-                {error && (
-                    <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-                        {error}
-                    </Typography>
-                )}
+                    {error && <p className="error-text">{error}</p>}
 
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 2 }}
-                >
-                    Verify
-                </Button>
-            </form>
-        </Container>
+                    <button type="submit">Verify</button>
+                </form>
+            </div>
+        </div>
     );
 };
 

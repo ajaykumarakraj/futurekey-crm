@@ -33,19 +33,23 @@ const Dashboard = () => {
     };
 
     const cards = [
-        { title: 'Fresh Lead', key: 'fresh_lead', path: '/leads/fresh' },
+
         { title: 'New Leads', key: 'new_lead', path: '/leads/new' },
         { title: 'In Process', key: 'in_process', path: '/leads/inprogress' },
         { title: 'Hot Leads', key: 'hot_lead', path: '/leads/hot' },
-        { title: 'Archived Lead', key: 'archived_lead', path: '/leads/archived' },
-        { title: 'Converted', key: 'converted', path: '/leads/converted' },
-        { title: 'Missed Follow Up', key: 'missed_follow_up', path: '/leads/missedfollowup' },
-        { title: 'Scheduled Site Visit', key: "scheduled_site_visit", path: '/lead/scheduledsite' },
         { title: 'Today Follow Up', key: 'today_follow_up', path: '/lead/todayfollow' },
+
+        { title: 'Missed Follow Up', key: 'missed_follow_up', path: '/leads/missedfollowup' },
+
+
         { title: 'Today Site Visit', key: 'today_site_visit', path: '/lead/TodaySiteVisit' },
         { title: 'Tomorrow Site Visit', key: 'tomorrow_site_visit', path: '/lead/TommorowSiteVisit' },
-        { title: 'Create Lead', key: null, path: '/leads/create' },
-        { title: 'Table View', key: null, path: '/table' },
+        { title: 'Scheduled Site Visit', key: "scheduled_site_visit", path: '/lead/scheduledsite' },
+        { title: 'Fresh Lead', key: 'fresh_lead', path: '/leads/fresh' },
+        { title: 'Archived Lead', key: 'archived_lead', path: '/leads/archived' },
+        { title: 'Converted', key: 'converted', path: '/leads/converted' },
+        // { title: 'Create Lead', key: null, path: '/leads/create' },
+        // { title: 'Table View', key: null, path: '/table' },
     ];
 
     return (

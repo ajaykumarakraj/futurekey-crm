@@ -122,6 +122,7 @@ const NewLead = () => {
 
   return (
     <div>
+      <h2 className="mb-2 text-center textsize headingstyle">New Leads</h2>
       {/* Filters */}
       <div style={{ padding: "20px", background: "#eaeaea", borderRadius: "6px", marginBottom: "20px" }}>
         <form style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>

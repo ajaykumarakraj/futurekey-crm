@@ -178,7 +178,9 @@ const FreshLead = () => {
   ];
 
   return (
-    <div style={{ padding: 20 }}>
+
+    <div >
+      <h2 className="mb-2 text-center textsize headingstyle">Fresh Leads</h2>
       <div style={{ background: "#eee", padding: 15, borderRadius: 6, marginBottom: 15, display: "flex", gap: 10 }}>
         <select onChange={handleTeamLeaderChange} value={filters.teamLeaderId}>
           <option value="">Select Team Leader</option>
