@@ -39,8 +39,8 @@ const UpdateCreateForm = () => {
     const [teamleaderId, setTeamLeaderId] = useState('');
     // agent
     const [getAgent, setGetAgent] = useState("");
-    const [agentid, setAgentId] = useState([]);
-    const [agent, setAgent] = useState([]);
+    const [agentid, setAgentId] = useState("");
+    const [agent, setAgent] = useState('');
 
     // state
     const [statedata, setState] = useState([])
@@ -180,7 +180,7 @@ const UpdateCreateForm = () => {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
             })
-            if (res.status === 200) {
+            if (res.data.status === 200) {
                 console.log("fetchdata", res.data)
                 const fetchdata = res.data.data
 
@@ -196,8 +196,11 @@ const UpdateCreateForm = () => {
                 setSelectProject(fetchdata.project_id)
                 setGetTeamLeader(res.data.tl_name)
                 setGetAgent(res.data.agent_name)
-                setGetNote(res.data.notes)
+                setAgentId(fetchdata.assign_agent_id)
 
+                setTeamLeaderId(fetchdata.assign_team_leader_id)
+                setGetNote(res.data.notes)
+                setLeadStatus(fetchdata.lead_status)
             }
         } catch (error) {
             console.log(error)
@@ -211,10 +214,22 @@ const UpdateCreateForm = () => {
             return;
         }
         // Validation: if not Archived and followUpDate is empty
-        if (leadStatus !== '4') {
+
+
+        // Rule 1: Require follow-up date if not archived and no call status selected
+        if (leadStatus !== '4' && !selectedDate && !callStatus == "") {
             setError('Follow-Up Date is required unless the lead is Archived.');
             return;
         }
+
+        // Rule 2: Require call action if call status is selected
+        if (callStatus && !callAction) {
+            setError('Call Action is required when Call Status is selected.');
+            return;
+        }
+
+        // If everything is valid
+        setError('');
         const formData = {
             user_id: user.user_id,
             id: id,
@@ -240,6 +255,7 @@ const UpdateCreateForm = () => {
             follow_up: selectedDate,
             last_call_action: callAction,
             lead_status: leadStatus,
+
         };
         console.log("post for update", formData)
         try {
@@ -248,16 +264,19 @@ const UpdateCreateForm = () => {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
             });
-            if (res.status === 200) {
+            console.log("response", res)
+            if (res.data.status == 200) {
+
                 toast.success("Client Update successfully!");
                 setNotes("")
+                window.location.reload();
             }
         } catch (error) {
-            toast.error("Failed to add client. Try again.");
+            toast.error(`Failed to add client. ${error}`);
         }
     };
 
-    console.log("check", selectedDate)
+    console.log("check", getnote)
     // console.log("check", getnote)
     return (
         <div className="container">
@@ -516,6 +535,7 @@ const UpdateCreateForm = () => {
                                     {getnote.map((v, k) => (
                                         <div key={k} className="pstyle">
                                             <p>{v.notes || ""}</p>
+                                            <p>{v.follow_up || ""}</p>
                                             <p> {v.lead_status || ""}</p>
                                             <p> {v.call_status || ""}</p>
                                             <p> {v.last_call_action || ""}</p>
@@ -523,6 +543,10 @@ const UpdateCreateForm = () => {
                                             <p> {v.house_visit || ""}</p>
                                             <p> {v.midmid_way_visit || ""}</p>
                                             <p> {v.site_visit || ""}</p>
+                                            <p> {v.tl_remark || ""}</p>
+                                            <p> {v.agent_remark || ""}</p>
+
+                                            <p> {v.lead_remark || ""}</p>
                                             <p> {v.by || ""}</p>
                                         </div>
                                     ))}

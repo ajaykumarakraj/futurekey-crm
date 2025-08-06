@@ -4,8 +4,10 @@ import axios from "axios";
 import Example from "./Example";
 import "../../app.css";
 import moment from "moment";
+import { useAuth } from "../../component/AuthContext";
 
 const FreshLead = () => {
+  const { user } = useAuth()
   const [data, setData] = useState([]);
   const [selectedLeads, setSelectedLeads] = useState([]);
   const [teamLeaders, setTeamLeaders] = useState([]);
@@ -113,12 +115,15 @@ const FreshLead = () => {
       lead_id: selectedLeads,
       tl_id: filters.teamLeaderId,
       agent_id: filters.agentId,
-      project_id: filters.projectId
+      project_id: filters.projectId,
+      user_id: user.user_id
     };
+    console.log("check", payload)
     try {
       const res = await api.post("/assign-lead", payload, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       });
+      console.log(res)
       if (res?.status === 200) {
         alert("Leads transferred!");
         setSelectedLeads([]);
@@ -176,6 +181,7 @@ const FreshLead = () => {
     { field: "leadSource", headerName: "Lead Source" },
     { field: "project", headerName: "Project" }
   ];
+  // console.log(user)
 
   return (
 
