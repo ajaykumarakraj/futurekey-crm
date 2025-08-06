@@ -36,8 +36,8 @@ const SignInPage = () => {
 
         {error && <p className="error-text">{error}</p>}
 
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="mobile">Mobile Number</label>
+        <form onSubmit={handleSubmit} style={{ textAlign: "center" }}>
+          <label htmlFor="mobile" style={{ display: "block" }}>Mobile Number</label>
           <input
             type="text"
             id="mobile"

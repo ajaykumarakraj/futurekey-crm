@@ -50,8 +50,8 @@ const VerifyOtpPage = () => {
                 <h2>Verify OTP</h2>
                 <p className="mobile-info">OTP sent to: <strong>{mobile}</strong></p>
 
-                <form onSubmit={handleSubmit}>
-                    <label htmlFor="otp">Enter OTP</label>
+                <form onSubmit={handleSubmit} className='verify'>
+                    <label htmlFor="otp" style={{ display: "block" }}>Enter OTP</label>
                     <input
                         type="text"
                         id="otp"
@@ -63,7 +63,7 @@ const VerifyOtpPage = () => {
 
                     {error && <p className="error-text">{error}</p>}
 
-                    <button type="submit">Verify</button>
+                    <button type="submit" className='btnverify'>Verify</button>
                 </form>
             </div>
         </div>
