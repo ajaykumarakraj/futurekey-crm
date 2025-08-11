@@ -56,13 +56,13 @@ input {
 .custom-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .custom-table th,
 .custom-table td {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 5px;
     text-align: left;
 }
 

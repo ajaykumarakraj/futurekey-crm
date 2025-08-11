@@ -5,9 +5,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import api from "../component/api";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../app.css"
+import { useAuth } from "../component/AuthContext";
 
 const CreateForm = () => {
-
+  const { user } = useAuth();
   const [name, setName] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
   const [number, setNumber] = useState("");
@@ -142,6 +143,7 @@ const CreateForm = () => {
     }
 
     const formData = {
+      user_id: user.user_id,
       name,
       contact: number,
       alt_contact: altnumber,
@@ -156,7 +158,7 @@ const CreateForm = () => {
       team_leader: teamleaderId,
       agent: agentid,
     };
-    console.log(formData)
+    console.log("create lead", formData)
     try {
       const res = await api.post("https://api.almonkdigital.in/api/create-customer", formData, {
         headers: {
@@ -183,7 +185,7 @@ const CreateForm = () => {
       toast.error("Failed to add client. Try again.");
     }
   };
-  // console.log("check", teamLeader)
+  console.log("check", user)
   // console.log("vdgfdgf", statedata)
   return (
     <div className="container">

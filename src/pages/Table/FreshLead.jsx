@@ -98,7 +98,7 @@ const FreshLead = () => {
         contactNumber: item.contact,
         city: item.city,
         leadSource: item.lead_source,
-        project: item.form_name
+        project: item.form_name,
       }));
 
       setData(mapped);

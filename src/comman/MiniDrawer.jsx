@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../component/AuthContext'
 import imgad from "../assets/images/hacker.png"
+import Swal from 'sweetalert2';
 export default function MiniDrawer() {
   const { user, token } = useAuth();
   const [isOpen, setIsOpen] = useState(true);
@@ -13,10 +14,24 @@ export default function MiniDrawer() {
 
   const handleLeadsClick = () => setIsLeadsOpen((prev) => !prev);
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    window.location.href = "/sign-in";
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, logout!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        window.location.href = "/sign-in";
+      }
+    });
   };
+
   console.log(user)
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', fontFamily: 'Helvetica, Arial, sans-serif' }}>
@@ -115,13 +130,13 @@ export default function MiniDrawer() {
                   }}>
                     Bulk Upload
                   </li></Link>
-                  <Link to="/leads/table" style={{ color: 'white', textDecoration: 'none' }}>   <li style={{
+                  {/* <Link to="/leads/table" style={{ color: 'white', textDecoration: 'none' }}>   <li style={{
                     marginBottom: '10px', padding: '8px 12px',
                     borderLeft: '4px solid #003961',
                     background: 'rgba(0, 0, 0, 0.2)', borderRadius: '5px'
                   }}>
                     Leads Table
-                  </li></Link>
+                  </li></Link> */}
 
                 </ul>
               )}
@@ -184,54 +199,7 @@ export default function MiniDrawer() {
               )}
 
             </li>
-            {/* Master setting Menu */}
-            {/* <li style={{ marginBottom: '15px' }}>
-              <button
-                onClick={() => setMasterOpen((prev) => !prev)}
-                style={{
-                  color: 'white',
-                  border: 'none',
-                  width: '100%',
-                  textAlign: 'left',
-                  padding: '10px',
-                  borderRadius: '5px',
-                  background: isMasterOpen ? "#003961" : "none",
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between'
-                }}
-                onMouseOver={(e) => e.target.style.background = "#003961"}
-                onMouseOut={(e) => e.target.style.background = isMasterOpen ? "#003961" : "none"}
-              >
-                Master Setting <span>{isMasterOpen ? '▾' : '▸'}</span>
-              </button>
 
-
-              {isMasterOpen && (
-                <ul style={{
-                  listStyle: 'none', padding: '10px 20px', margin: '0',
-                  background: 'rgba(0, 0, 0, 0.3)', borderRadius: '5px'
-                }}>
-                  <li style={{
-                    marginBottom: '10px', padding: '8px 12px',
-                    borderLeft: '4px solid #003961',
-                    background: 'rgba(0, 0, 0, 0.2)', borderRadius: '5px'
-                  }}>
-                    <Link to="/projects/create" style={{ color: 'white', textDecoration: 'none' }}>Create New </Link>
-                  </li>
-                  <li style={{
-                    marginBottom: '10px', padding: '8px 12px',
-                    borderLeft: '4px solid #003961',
-                    background: 'rgba(0, 0, 0, 0.2)', borderRadius: '5px'
-                  }}>
-                    <Link to="/projects/list" style={{ color: 'white', textDecoration: 'none' }}>View All User</Link>
-                  </li>
-
-                </ul>
-              )}
-
-            </li> */}
             {/* Master Setting */}
             <li style={{ marginBottom: '15px' }}>
               <Link
@@ -251,20 +219,7 @@ export default function MiniDrawer() {
             </li>
             {/* Table Menu */}
             <li style={{ marginBottom: '15px' }}>
-              <Link
-                to="/table"
-                style={{
-                  color: 'white', textDecoration: 'none',
-                  display: 'flex', alignItems: 'center',
-                  padding: '10px', borderRadius: '5px',
-                  background: location.pathname === "/table" ? "#003961" : "none",
-                  transition: 'background 0.3s'
-                }}
-                onMouseOver={(e) => e.target.style.background = "#003961"}
-                onMouseOut={(e) => e.target.style.background = location.pathname === "/table" ? "#003961" : "none"}
-              >
-                Table
-              </Link>
+
             </li>
             {/* Table Menu */}
             <li style={{ marginBottom: '15px' }}>
@@ -283,22 +238,7 @@ export default function MiniDrawer() {
                 Contact Support
               </Link>
             </li>
-            {/* Setting Section */}
-            {/* <li style={{ marginBottom: '15px' }}>
-              <Link
-                to="/change-password"
-                style={{
-                  color: 'white', textDecoration: 'none',
-                  padding: '10px', borderRadius: '5px',
-                  background: location.pathname === "/change-password" ? "#003961" : "none",
-                  transition: 'background 0.3s'
-                }}
-                onMouseOver={(e) => e.target.style.background = "#003961"}
-                onMouseOut={(e) => e.target.style.background = location.pathname === "/change-password" ? "#003961" : "none"}
-              >
-                Change Password
-              </Link>
-            </li> */}
+
 
 
 
